@@ -1,0 +1,62 @@
+<%!
+	//control the globals and the redis db connection
+	import redis_client;
+	
+	int first = 1, connected = 0;
+	Redis db;
+	//IMPORTANT. I dev on the same redis db for all of my projects so I have to set it to another index
+	int db_index = 2;
+	
+	string db_prefix = "greenit:";
+	
+	//=========================
+	
+	string format_username(string username)
+	{
+		string fina_strl = filter_string(username);
+		//return lower_case(fina_strl);
+		return fina_strl;
+	}
+	
+	string filter_string(string old)
+	{
+		//prevent XSS
+		string fina_strl;
+		fina_strl = replace(old, "<", "&lt;");
+		fina_strl = replace(fina_strl, ">", "&gt;");
+		
+		return fina_strl;
+	}
+	
+	string username_from_token(string token)
+	{
+		if(token)
+		{
+			string key = db->get(db_prefix + "token:" + replace(token, "\r\n", ""));
+			return db->hget( replace(key, "\r\n", ""), "username");
+		}
+		return "";
+		
+	}
+%>
+
+<%
+	//manage the globals
+	if(first)
+	{
+		write("connecting to redis db\n");
+		db = Redis();
+		db->connect();
+		
+		if(db->ping() && db->select(db_index))
+		{
+			connected++;
+			write("redis db conection successful\n");
+		}
+		else
+			write("unable to connecto to redis db\n");
+		
+		//==================
+		first = 0;
+	}
+%>

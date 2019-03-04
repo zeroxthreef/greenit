@@ -1,3 +1,4 @@
+<%@ include file="/elements/util.psp" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -10,7 +11,7 @@
 	</head>
 	<body>
 	<div class="user_subs">
-		nothing
+		<% if(!connected) %> ERROR: DB disconnected<% %>nothing
 	</div>
 	<div class="banner">
 		<div class="banner_options">

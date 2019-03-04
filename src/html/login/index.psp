@@ -1,3 +1,4 @@
+<%! import Crypto; %>
 <%@ include file="/elements/header.psp" %>
 	<div class="feed">
 	
@@ -8,14 +9,34 @@
 		<%
 			if(request->method == "POST")
 			{
-				out += "oof" + request->variables->username;
+				string username = format_username(request->variables->username);
+				string user_key = db_prefix + username;
+				
+				if(db->exists(user_key))
+				{
+					if(Crypto.Password.verify(request->variables->password, db->hget(user_key, "password")))
+					{
+						out += "logging in";
+						
+						mapping ret = HTTP.set_cookie("token", db->hget(user_key, "token"), time() + 604800, request);
+						
+						//scriptrunner wont let you set headers or cookies.... great...
+						//this is ridiculous
+						out += "<script>document.cookie =\"" + ret->_headers["set-cookie"] + "\"</script>";
+					}
+					else
+						out += "incorrect password";
+				}
+				else
+					out += "user does not exist";
+				
 			}
 		%>
 		<form action="/login/" method="post">
 			Username:<br>
 			<input type="text" name="username"><br>
 			Password:<br>
-			<input type="text" name="password"><br><br>
+			<input type="password" name="password"><br><br>
 			<input type="submit" value="submit" id="submit">
 		</form>
 		
