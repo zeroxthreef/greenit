@@ -11,7 +11,20 @@
 	</head>
 	<body>
 	<div class="user_subs">
-		<% if(!connected) %> ERROR: DB disconnected<% %>nothing
+		<% if(!connected) %> ERROR: DB disconnected<% %>
+		<%
+			array(string) keys = db->keys("greenit:subgreenit*");
+			
+			if(keys)
+			{
+				foreach(keys, string key)
+				{
+					out += "<a style=\"margin-right: 0.5%;\" href=\"/g/" + key[strlen(db_prefix + "subgreenit:")..] + "\">g/" + key[strlen(db_prefix + "subgreenit:")..] + "</a>";
+				}
+			}
+			else
+				out += "no subgreenits";
+		%>
 	</div>
 	<div class="banner">
 		<div class="banner_options">

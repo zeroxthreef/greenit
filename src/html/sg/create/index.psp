@@ -9,7 +9,15 @@
 				if(user_logged_in(request->cookies->token))
 				{
 					if(is_clean_sg_string(request->variables->name))
-						out += "created subgreenit at <a href=/g/" + request->variables->name + ">/g/" + request->variables->name + "</a>";
+					{
+						if(!db->exists(db_prefix + "subgreenit:" + request->variables->name))
+						{
+							db->hmset(db_prefix + "subgreenit:" + request->variables->name, "name", request->variables->name, "creator", username_from_token(request->cookies->token), "about", "", "date_created", Protocols.HTTP.Server.http_date(time()));
+							out += "created subgreenit at <a href=/g/" + request->variables->name + ">/g/" + request->variables->name + "</a>";
+						}
+						else
+							out += "subgreenit already exists";
+					}
 					else
 						out += "subgreenit name needs to be greater than 2 characters and less than 30 characters long. Also, only A-z allowed";
 				}
@@ -23,6 +31,7 @@
 			<input type="submit" value="submit" id="submit">
 		</form>
 		
+		(please dont spam this. I'm using an O(N) method of retrieving keys)
 	</div>
 	
 	<%@ include file="/elements/controls.psp" %>
