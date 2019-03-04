@@ -18,7 +18,7 @@
 				}
 				
 				//make sure the username isnt already used
-				string user_key = db_prefix + username;
+				string user_key = db_prefix + "user:" + username;
 				
 				if(db->exists(user_key) && can_continue)
 				{

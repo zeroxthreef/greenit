@@ -1,0 +1,26 @@
+<%@ include file="/elements/header.psp" %>
+	<div class="feed">
+	
+		<h1>Logging out...</h1>
+		
+		<%
+			
+			if(user_logged_in(request->cookies->token))
+			{
+				mapping ret = HTTP.set_cookie("token", request->cookies->token, time() - 4000, request);
+				
+				//scriptrunner wont let you set headers or cookies.... great...
+				//this is ridiculous
+				out += "<script>document.cookie =\"" + ret->_headers["set-cookie"] + "\"</script>";
+				out += "logout successful";
+			}
+			else
+				out += "you arent logged in";
+		%>
+		
+	</div>
+	
+	<%@ include file="/elements/controls.psp" %>
+	
+</div>
+<%@ include file="/elements/footer.psp" %>

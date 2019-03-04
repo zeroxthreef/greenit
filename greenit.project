@@ -90,6 +90,9 @@
         </VirtualDirectory>
         <File Name="src/html/sg/index.psp"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="logout">
+        <File Name="src/html/logout/index.psp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <File Name="src/greenit_scgi_params"/>
     <File Name="src/greenit.conf"/>

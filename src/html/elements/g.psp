@@ -1,0 +1,11 @@
+<%@ include file="/elements/header.psp" %>
+	<div class="feed">
+	
+		<h1>nice sg</h1>
+		
+	</div>
+	
+	<%@ include file="/elements/controls.psp" %>
+	
+</div>
+<%@ include file="/elements/footer.psp" %>

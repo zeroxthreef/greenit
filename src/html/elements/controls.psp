@@ -2,7 +2,11 @@
 		Controls:
 		<hr></hr>
 		<a href="/account/<%=username_from_token(request->cookies->token)%>">My account</a><br><br>
+		<% if(user_logged_in(request->cookies->token)) %>
+		<a href="/logout">Log out</a><br><br>
+		<% else %>
 		<a href="/login">Log in/register</a><br><br>
+		<% %>
 		<a href="/sg/create">Create subgreenit</a><br><br>
 		<a href="/sg">What is a subgreenit</a><br><br>
 		

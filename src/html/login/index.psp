@@ -10,7 +10,7 @@
 			if(request->method == "POST")
 			{
 				string username = format_username(request->variables->username);
-				string user_key = db_prefix + username;
+				string user_key = db_prefix + "user:" + username;
 				
 				if(db->exists(user_key))
 				{

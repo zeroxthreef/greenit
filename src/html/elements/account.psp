@@ -1,0 +1,23 @@
+<%@ include file="/elements/header.psp" %>
+	<div class="feed">
+		
+		<%
+		string username = request->not_query[strlen("/account/")..], user_key = db_prefix + "user:" + request->not_query[strlen("/account/")..];
+		
+		if(db->exists(db_prefix + "user:" + request->not_query[strlen("/account/")..]))
+		{
+			out += "<center><h1>"+ username + " </h1></center>";
+			
+			out += "<h2>Account creation date - " + db->hget(user_key, "date_created") +"</h2>";
+		}
+		else
+			out += "<h1>No user - " + request->not_query[strlen("/account/")..] + "</h1>";
+		
+		%>
+		
+	</div>
+	
+	<%@ include file="/elements/controls.psp" %>
+	
+</div>
+<%@ include file="/elements/footer.psp" %>

@@ -6,7 +6,15 @@
 		<%
 			if(request->method == "POST")
 			{
-				out += "oof" + request->variables->username;
+				if(user_logged_in(request->cookies->token))
+				{
+					if(is_clean_sg_string(request->variables->name))
+						out += "created subgreenit at <a href=/g/" + request->variables->name + ">/g/" + request->variables->name + "</a>";
+					else
+						out += "subgreenit name needs to be greater than 2 characters and less than 30 characters long. Also, only A-z allowed";
+				}
+				else
+					out += "you need an account to do this";
 			}
 		%>
 		<form action="/sg/create/" method="post">

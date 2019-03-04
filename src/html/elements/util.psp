@@ -36,7 +36,25 @@
 			return db->hget( replace(key, "\r\n", ""), "username");
 		}
 		return "";
+	}
+	
+	int user_logged_in(string token)
+	{
+		return strlen(username_from_token(token));
+	}
+	
+	int is_clean_sg_string(string subgreenit)
+	{
+		if(strlen(subgreenit) > 30 || strlen(subgreenit) < 2)
+			return 0;
 		
+		for(int i = 0; i < strlen(subgreenit); i++)//make sure only alpha
+		{
+			if((subgreenit[i] < 65 || subgreenit[i] > 90) && (subgreenit[i] < 97 || subgreenit[i] > 122))
+				return 0;
+		}
+		
+		return 1;
 	}
 %>
 
