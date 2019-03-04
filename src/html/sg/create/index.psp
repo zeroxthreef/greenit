@@ -1,0 +1,23 @@
+<%@ include file="/elements/header.psp" %>
+	<div class="feed">
+	
+		<h1>Create subgreenit</h1>
+		
+		<%
+			if(request->method == "POST")
+			{
+				out += "oof" + request->variables->username;
+			}
+		%>
+		<form action="/sg/create/" method="post">
+			Subgreenit name:<br>
+			<input type="text" name="name"><br><br>
+			<input type="submit" value="submit" id="submit">
+		</form>
+		
+	</div>
+	
+	<%@ include file="/elements/controls.psp" %>
+	
+</div>
+<%@ include file="/elements/footer.psp" %>

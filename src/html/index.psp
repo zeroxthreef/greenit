@@ -1,0 +1,21 @@
+<%@ include file="/elements/header.psp" %>
+	<div class="feed">
+	
+		<div class="feed_object">
+			<div class="feed_object_updn_container">(0) upvode (0) downvote |</div><div class="feed_object_title_container">This is a title: <%= request->not_query %></div>
+		</div>
+		
+		<div class="feed_object">
+			<div class="feed_object_updn_container">(0) upvode (0) downvote |</div><div class="feed_object_title_container">This is a title</div>
+		</div>
+		
+		<div class="feed_object">
+			<div class="feed_object_updn_container">(0) upvode (0) downvote |</div><div class="feed_object_title_container">This is a title</div>
+		</div>
+		
+	</div>
+	
+	<%@ include file="/elements/controls.psp" %>
+	
+</div>
+<%@ include file="/elements/footer.psp" %>

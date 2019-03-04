@@ -1,0 +1,71 @@
+html, body {
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.user_subs
+{
+	padding: 0.3%;
+	width: 99.4%;
+	background-color: #71E75D;
+}
+
+.banner
+{
+	padding: 0.3%;
+	padding-bottom: 0%;
+	width: 99.4%;
+	height: 80px;
+	background-color: #71C562;
+}
+
+.banner_options
+{
+	margin-left: 1%;
+	padding: 0.3%;
+	float: left;
+	width: auto;
+}
+
+.main_content
+{
+	width: 96%;
+	padding: 2%;
+}
+
+.feed
+{
+	float: left;
+	width: 71%;
+}
+
+.controls
+{
+	float: left;
+	width: 29%;
+}
+
+.feed_object
+{
+	background-color: #95B190;
+	margin-bottom: 5px;
+	padding: 0.3%;
+	display: inline-block;
+	width: 96%;
+}
+
+.feed_object_updn_container
+{
+	display: inline-block;
+	float: left;
+	height: 100%;
+}
+
+.feed_object_title_container
+{
+	margin-left: 100px;
+	display: inline-block;
+	float: left;
+}

@@ -1,0 +1,13 @@
+<%@ include file="/elements/header.psp" %>
+	<div class="feed">
+	
+		<h1>What is a subgreenit?</h1>
+		
+		This is a bad reddit clone. If you're using it, you know what a subgreenit would be.
+		
+	</div>
+	
+	<%@ include file="/elements/controls.psp" %>
+	
+</div>
+<%@ include file="/elements/footer.psp" %>

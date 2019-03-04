@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Project Name="greenit" Version="10.0.0" InternalType="">
+  <Reconciliation>
+    <Regexes/>
+    <Excludepaths/>
+    <Ignorefiles/>
+    <Extensions>
+      <![CDATA[cpp;c;h;hpp;xrc;wxcp;fbp;pike;psp;html]]>
+    </Extensions>
+    <Topleveldir>../greenit</Topleveldir>
+  </Reconciliation>
+  <Description/>
+  <Dependencies/>
+  <Settings Type="Executable">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="" Assembler="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="Debug" CompilerType="GCC" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -Wall" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="-O0" Required="yes">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="Debug"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./Debug" PauseExecWhenProcTerminates="no" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
+      <Environment EnvVarSetName="&lt;Use Workspace Settings&gt;" DbgSetName="&lt;Use Global Settings&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+  </Settings>
+  <VirtualDirectory Name="src">
+    <File Name="src/ScriptRunner_SCGI.pike"/>
+    <VirtualDirectory Name="html">
+      <File Name="src/html/index.psp"/>
+      <VirtualDirectory Name="elements">
+        <File Name="src/html/elements/header.psp"/>
+        <File Name="src/html/elements/footer.psp"/>
+        <File Name="src/html/elements/util.pike"/>
+        <File Name="src/html/elements/404.psp"/>
+        <File Name="src/html/elements/controls.psp"/>
+        <File Name="src/html/elements/account.psp"/>
+        <File Name="src/html/elements/g.psp"/>
+      </VirtualDirectory>
+      <File Name="src/html/style.css"/>
+      <VirtualDirectory Name="login">
+        <File Name="src/html/login/index.psp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="register">
+        <File Name="src/html/register/index.psp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="sg">
+        <VirtualDirectory Name="create">
+          <File Name="src/html/sg/create/index.psp"/>
+        </VirtualDirectory>
+        <File Name="src/html/sg/index.psp"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <File Name="src/greenit_scgi_params"/>
+    <File Name="src/greenit.conf"/>
+    <File Name="src/install.sh"/>
+  </VirtualDirectory>
+</CodeLite_Project>

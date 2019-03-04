@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>greenit</title>
+		<meta name="description" content="A bad reddit clone that doesnt work"/>
+		<meta name="DC.title" content="Greenit"/>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="img/ico" href="/favicon.ico">
+		<link href="/style.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+	<div class="user_subs">
+		nothing
+	</div>
+	<div class="banner">
+		<div class="banner_options">
+			<h1>Greenit g/all</h1>
+		</div>
+		<div class="banner_options">
+			<a href="/">home</a> | <a href="/g/all/new">new</a> | <a href="/g/all/popular">popular</a> | <a href="/g/all/controversial">controversial</a>
+		</div>
+	</div>
+	<div class="main_content">
