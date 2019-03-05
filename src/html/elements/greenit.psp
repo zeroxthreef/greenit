@@ -48,7 +48,7 @@
 		//the key is corrupted for whatever reason
 		string fixed_key = temp[0] +":" + temp[1] + ":" + temp[2] + ":" + replace(temp[3], "\r", "");
 		
-		write("hey \"%s\"\n", fixed_key);
+		//write("hey \"%s\"\n", fixed_key);
 		
 		return "\n\
 		<div class=\"feed_object\">\n\
@@ -228,6 +228,109 @@
 		
 		final_str = temp * "&gt";
 		
+		temp = final_str / "\n";
+		
+		final_str = temp * "<br>";
+		
+		return final_str;
+	}
+	
+	string format_parse(string input)
+	{
+		string final_str = input;
+		array(string) temp;
+		int img_esc = 0, video_esc = 0, url_esc = 0, bold_esc = 0, ital_esc = 0, under_esc = 0;
+		
+		
+		
+		//strip out html
+		
+		temp = final_str / "<";
+		
+		final_str = temp * "&lt";
+		
+		temp = final_str / ">";
+		
+		final_str = temp * "&gt";
+		
+		//control formats
+		
+		//imgur images
+		
+		array(string) img_open = final_str / "[img]";
+		array(string) img_close = final_str / "[/img]";
+		
+		if(sizeof(img_open) == sizeof(img_close))
+		{
+			final_str = img_open * "<img style=\"\width: 100%;\" src=\"https://i.imgur.com/";
+			array(string) img_close2 = final_str / "[/img]";
+			final_str = img_close2 * "\"/>";
+		}
+		
+		//youtube videos
+		
+		array(string) vid_open = final_str / "[video]";
+		array(string) vid_close = final_str / "[/video]";
+		
+		if(sizeof(vid_open) == sizeof(vid_close))
+		{
+			final_str = vid_open * "<iframe style=\"\width: 100%;\" src=\"https://www.youtube.com/embed/";
+			array(string) vid_close2 = final_str / "[/video]";
+			final_str = vid_close2 * "\"></iframe>";
+		}
+		
+		//links
+		
+		array(string) url_open = final_str / "[url]";
+		array(string) url_close = final_str / "[/url]";
+		
+		if(sizeof(url_open) == sizeof(url_close))
+		{
+			final_str = url_open * "<a href=\"";
+			array(string) vid_close2 = final_str / "[/url]";
+			final_str = vid_close2 * "\">link</a>";
+		}
+		
+		//bold
+		
+		array(string) bold_open = final_str / "[b]";
+		array(string) bold_close = final_str / "[/b]";
+		
+		if(sizeof(bold_open) == sizeof(bold_close))
+		{
+			final_str = bold_open * "<b>";
+			array(string) bold_close2 = final_str / "[/b]";
+			final_str = bold_close2 * "</b>";
+		}
+		
+		//italics
+		
+		array(string) italics_open = final_str / "[i]";
+		array(string) italics_close = final_str / "[/i]";
+		
+		if(sizeof(italics_open) == sizeof(italics_close))
+		{
+			final_str = italics_open * "<i>";
+			array(string) italics_close2 = final_str / "[/i]";
+			final_str = italics_close2 * "</i>";
+		}
+		
+		//underline
+		
+		array(string) under_open = final_str / "[u]";
+		array(string) under_close = final_str / "[/u]";
+		
+		if(sizeof(under_open) == sizeof(under_close))
+		{
+			final_str = under_open * "<u>";
+			array(string) under_close2 = final_str / "[/u]";
+			final_str = under_close2 * "</u>";
+		}
+		
+		
+		
+		
+		//finally, modify all newlines
 		temp = final_str / "\n";
 		
 		final_str = temp * "<br>";

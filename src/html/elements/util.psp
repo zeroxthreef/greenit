@@ -95,5 +95,5 @@
 	}
 	//this gets corrupted for whatever reason
 	page_num = (int)request->variables->p;
-	write("hey " + page_num + "\n");
+	//write("hey " + page_num + "\n");
 %>

@@ -51,14 +51,17 @@
 			}
 			else if(sub_path == "create")
 			{
+				string response = "";
+				string format_notes = "Notes on formatting:<br><br>for videos, take the youtube video id (no ?=) place it between a [video]id_here[/video] tag.<br><br>for images, only imgur works. Copy an imgur image location and place everything after the imgur domain name between [img]image.png[/img]<br><br>For bold, underline, and italics, follow the same ide of opening and closing tags, but with [b][/b], [i],[/i], and [u],[/u]<br><br>";
 				if(request->method == "POST" && user_logged_in(request->cookies->token))
 				{
 					//create the post db things
 					string posts_key = db_prefix + "variable:" + current_subgreenit(request->not_query) + ":posts";
-					string response = "";
+					
 					
 					if(strlen(request->variables->body) > 9000)
 						response += "Post too large. Keep it under 9000 characters";
+					
 					else if(is_clean_title_string(request->variables->title))
 					{
 						int r_num = random(5000000);
@@ -72,12 +75,11 @@
 						response += "Created post at <a href=\"/" + banner_current_subgreenit(request->not_query) + "/comments/" + safe_title_string(request->variables->title) + "\">" + banner_current_subgreenit(request->not_query) + "/comments/" + safe_title_string(request->variables->title) + "</a>";
 					}
 					else
-						response = "Please keep the post title under 50 characters and over 3 characters long. Also must only contain printable characters and no underscores";
-					
-					out += "Notes on formatting. All tags are [img]url/to/img.(png || gif || any other type)[/img] (only works on imgur), [video]youtube video url[/video] (only works on youtube), [url]url/to/place[/url], or [b]bold[/b][i]italics[/i][u]underscore[/]. These may or may not all be currently working.<br><br>" + response + "<br><br>" + get_create_form(current_subgreenit(request->not_query));
+						response += "Please keep the post title under 50 characters and over 3 characters long. Also must only contain printable characters and no underscores";
 				}
-				else
-					out += "Notes on formatting. All tags are [img]url/to/img.(png || gif || any other type)[/img] (only works on imgur), [video]youtube video url[/video] (only works on youtube), [url]url/to/place[/url], or [b]bold[/b][i]italics[/i][u]underscore[/]. These may or may not all be currently working.<br><br>" + get_create_form(current_subgreenit(request->not_query));
+				
+				out += format_notes + response;
+				out += get_create_form(current_subgreenit(request->not_query));
 			}
 			else
 				out += "youre in a place";

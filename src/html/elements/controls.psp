@@ -3,12 +3,14 @@
 			if(in_subgreenit(request->not_query))
 			{
 				out += banner_current_subgreenit(request->not_query) + ":<hr></hr>";
-				out += db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about") + "<br><br>";
+				out += format_parse(db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about")) + "<br><br>";
 				if(user_logged_in(request->cookies->token))
 					out += "<input type=\"button\" onclick=\"location.href=\'/g/" + current_subgreenit(request->not_query) + "/create/\'\" value=\"Create Post\" /><br><br>";
 				
 				//handle the css uploading and about test
-				if(request->method == "POST" && user_logged_in(request->cookies->token)) //allow the creator to change the about text
+				array(string) temp = request->not_query / "/";
+				
+				if(request->method == "POST" && user_logged_in(request->cookies->token) && !sizeof(temp[3])) //allow the creator to change the about text
 				{
 					string key = db_prefix + "subgreenit:" + current_subgreenit(request->not_query);
 					
@@ -18,13 +20,15 @@
 							out += "about string too long. Keep it under 2000 characters";
 						else
 						{
-							db->hset(key, "about", safe_about_string(request->variables->about));
+							//db->hset(key, "about", safe_about_string(request->variables->about));
+							db->hset(key, "about", request->variables->about);
 							out += "updated about text. go to subgreenit home to see changes";
 						}
 					}
 					else
 						out += "invalid permission";
 				}
+				
 			}
 		%>
 		<%
@@ -35,7 +39,7 @@
 			{
 				out += "<form action=\"/g/" + current_subgreenit(request->not_query) + "/\" method=\"post\">\n\
 					Subgreenit about text:<br>\n\
-					<textarea name=\"about\" cols=\"30\" rows=\"10\"></textarea><br>\n\
+					<textarea name=\"about\" cols=\"30\" rows=\"10\">" + db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about") + "</textarea><br>\n\
 					<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
 				</form><br>";
 			}
