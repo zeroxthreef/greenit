@@ -1,7 +1,63 @@
 <%@ include file="/elements/header.psp" %>
 	<div class="feed">
-	
-		<h1>nice sg</h1>
+		
+		<%
+			array(string) sub_uri = trim_uri(request->not_query) / "/";
+			string sub_path = "";
+			int sg_home = 0;
+			
+			//write("hey " + trim_uri(request->not_query) + "\n");
+			
+			if(sizeof(sub_uri) > 2)
+				sub_path += sub_uri[3];
+			
+			if(sizeof(sub_uri) > 2 && sub_path == "")
+				sg_home++;
+			
+			if(sg_home || sizeof(sub_uri) <= 2 || sub_path == "new" || sub_path == "popular" || sub_path == "controversial" || sub_path[0] == 'p')
+			{
+				//detect the page
+				if(sub_path[0] == 'p' && sg_home) //its the home page
+				{
+					
+				}
+				else if(sg_home)
+					out += get_subgreenit_posts(current_subgreenit(trim_uri(request->not_query)), sub_path, 0);
+				
+				//its any other
+			}
+			else if(sub_path == "create")
+			{
+				if(request->method == "POST" && user_logged_in(request->cookies->token))
+				{
+					//create the post db things
+					string posts_key = db_prefix + "variable:" + current_subgreenit(request->not_query) + ":posts";
+					string response = "";
+					
+					if(strlen(request->variables->body) > 9000)
+						response += "Post too large. Keep it under 9000 characters";
+					else if(is_clean_title_string(request->variables->title))
+					{
+						string sg_post_key = db_prefix + "post:" + safe_title_string(request->variables->title);
+						
+						db->rpush(posts_key, sg_post_key);
+						
+						//create the post key
+						db->hmset(sg_post_key, "creator", username_from_token(request->cookies->token), "body", request->variables->body, "post_date", Protocols.HTTP.Server.http_date(time()), "upvotes", "0", "downvotes", "0");
+						
+						response += "Created post at <a href=\"/" + banner_current_subgreenit(request->not_query) + "/comments/" + safe_title_string(request->variables->title) + "\">" + banner_current_subgreenit(request->not_query) + "/comments/" + safe_title_string(request->variables->title) + "</a>";
+					}
+					else
+						response = "Please keep the post title under 50 characters and over 3 characters long. Also must only contain printable characters";
+					
+					out += "Notes on formatting. All tags are [img]url/to/img.(png || gif || any other type)[/img] (only works on imgur), [video]youtube video url[/video] (only works on youtube), [url]url/to/place[/url], or [b]bold[/b][i]italics[/i][u]underscore[/]. These may or may not all be currently working.<br><br>" + response + "<br><br>" + get_create_form(current_subgreenit(request->not_query));
+				}
+				else
+					out += "Notes on formatting. All tags are [img]url/to/img.(png || gif || any other type)[/img] (only works on imgur), [video]youtube video url[/video] (only works on youtube), [url]url/to/place[/url], or [b]bold[/b][i]italics[/i][u]underscore[/]. These may or may not all be currently working.<br><br>" + get_create_form(current_subgreenit(request->not_query));
+			}
+			else
+				out += "youre in a place";
+		%>
 		
 	</div>
 	

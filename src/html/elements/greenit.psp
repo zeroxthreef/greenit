@@ -1,0 +1,148 @@
+<%!
+	#define POSTS_PER_PAGE 15
+	string get_subgreenit_posts(string sg, string location, int page)
+	{
+		string final_str = "", posts_key = db_prefix + "variable:" + sg + ":posts";
+		array(string) posts;
+		int db_page = 0, db_end = 0, total = db->llen(posts_key);
+		
+		db_page = page * POSTS_PER_PAGE;
+		db_end = db_page + POSTS_PER_PAGE;
+		
+		write("yo " + page * POSTS_PER_PAGE + " " + total + "\n");
+		
+		if(db_page <= total && total)
+		{
+			if(db_end > total)
+				db_end = total - db_page + db_page;
+			
+			posts = db->lrange(posts_key, db_page, db_end);
+			//TODO: use location like new to sort posts
+			
+			
+			//new only
+			
+			foreach(posts, string key)
+				final_str += create_post_element(key);
+			
+			
+		}
+		else if(!total)
+			final_str += "<h1>No posts. Feel free to create one</h1>";
+		else
+			final_str += "";
+		
+		
+		return final_str;
+	}
+	
+	string create_post_element(string key)
+	{
+		array(string) temp = key / ":";
+		
+		return "\n\
+		<div class=\"feed_object\">\n\
+			<div class=\"feed_object_updn_container\">(" + db->hget(key, "upvotes") + ") upvote<br>(" + db->hget(key, "downvotes")  + ") downvote</div><div class=\"feed_object_title_container\">" + unformat_title(temp[2]) + "</div>\n\
+		</div>";
+	}
+	
+	string unformat_title(string title)
+	{
+		array(string) temp = title / "_";
+		
+		return temp * " ";
+	}
+	
+	
+	string current_subgreenit(string query)
+	{
+		if(query == "/")
+			return "all";
+		else if(query[..strlen("/g")] != "/g/")
+			return "";
+		
+		if(query != "/")
+		{
+			string temp_str = query[strlen("/g/")..], final_str = "";
+			
+			if(search(temp_str, "/") != 0)
+			{
+				//write("hey %s\n", temp_str);
+				for(int i = 0; i < strlen(temp_str); i++)
+				{
+					if(temp_str[i] != '/')
+						final_str += temp_str[i..i+0];
+					else
+						return final_str;
+				}
+			}
+			else
+				return temp_str;
+			
+		}
+		
+		return "";
+	}
+	
+	string banner_current_subgreenit(string query)
+	{
+		if(query && strlen(current_subgreenit(query)))
+			return "g/" + current_subgreenit(query);
+		
+		return "";
+	}
+	
+	int in_subgreenit(string query)
+	{
+		return db->exists(db_prefix + "subgreenit:" + current_subgreenit(query));
+	}
+	
+	string get_create_form(string subgreenit)
+	{
+		string form = "\n\
+		<form action=\"/g/" + subgreenit + "/create/\" method=\"post\">\n\
+			Title:<br>\n\
+			<input type=\"text\" name=\"title\"><br>\n\
+			Body:<br>\n\
+			<textarea name=\"body\" cols=\"80\" rows=\"20\"></textarea><br><br>\n\
+			<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
+		</form>";
+		
+		return form;
+	}
+	
+	int is_clean_title_string(string title)
+	{
+		if(strlen(title) > 50 || strlen(title) < 2)
+			return 0;
+		
+		for(int i = 0; i < strlen(title); i++)//make sure only alpha
+		{
+			if((title[i] < 32 || title[i] > 126))
+				return 0;
+		}
+		
+		return 1;
+	}
+	
+	string safe_title_string(string title)
+	{
+		string final_str;
+		array(string) temp;
+		
+		temp = title / " ";
+		
+		final_str = temp * "_";
+		
+		temp = final_str / "<";
+		
+		final_str = temp * "&lt";
+		
+		temp = final_str / ">";
+		
+		final_str = temp * "&gt";
+		
+		return final_str;
+	}
+	
+%>

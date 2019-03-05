@@ -68,6 +68,8 @@
 			<input type="submit" value="submit" id="submit">
 		</form>
 		
+		(please don't use a password you use anywhere else. The salt and hashes are stored right next to eachother so if anyone were to be able to get into the redis db used, it would be really easy to compare hashes to get your password if its common enough)
+		
 	</div>
 	
 	<%@ include file="/elements/controls.psp" %>

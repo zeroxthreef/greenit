@@ -13,6 +13,7 @@
 						if(!db->exists(db_prefix + "subgreenit:" + request->variables->name))
 						{
 							db->hmset(db_prefix + "subgreenit:" + request->variables->name, "name", request->variables->name, "creator", username_from_token(request->cookies->token), "about", "", "date_created", Protocols.HTTP.Server.http_date(time()));
+							db->lpush(db_prefix + "variable:subgreenits",db_prefix + "subgreenit:" + request->variables->name);
 							out += "created subgreenit at <a href=/g/" + request->variables->name + ">/g/" + request->variables->name + "</a>";
 						}
 						else
@@ -31,7 +32,7 @@
 			<input type="submit" value="submit" id="submit">
 		</form>
 		
-		(please dont spam this. I'm using an O(N) method of retrieving keys)
+		(please dont spam this)
 	</div>
 	
 	<%@ include file="/elements/controls.psp" %>

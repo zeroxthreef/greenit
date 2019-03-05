@@ -16,6 +16,7 @@
 			}
 			else
 				out += "you arent logged in";
+			
 		%>
 		
 	</div>

@@ -1,4 +1,14 @@
 	<div class="controls">
+		<%
+			if(in_subgreenit(request->not_query))
+			{
+				out += banner_current_subgreenit(request->not_query) + ":<hr></hr>";
+				out += db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about") + "<br><br>";
+				if(user_logged_in(request->cookies->token))
+					out += "<input type=\"button\" onclick=\"location.href=\'/g/" + current_subgreenit(request->not_query) + "/create/\'\" value=\"Create Post\" /><br><br>";
+				
+			}
+		%>
 		Controls:
 		<hr></hr>
 		<a href="/account/<%=username_from_token(request->cookies->token)%>">My account</a><br><br>

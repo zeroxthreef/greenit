@@ -1,4 +1,5 @@
 <%@ include file="/elements/util.psp" %>
+<%@ include file="/elements/greenit.psp" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -13,13 +14,14 @@
 	<div class="user_subs">
 		<% if(!connected) %> ERROR: DB disconnected<% %>
 		<%
-			array(string) keys = db->keys("greenit:subgreenit*");
+			//array(string) keys = db->keys("greenit:subgreenit*");
+			array(string) keys = db->lrange("greenit:variable:subgreenits", 0, -1);
 			
-			if(keys)
+			if(keys && sizeof(keys) > 0)
 			{
 				foreach(keys, string key)
 				{
-					out += "<a style=\"margin-right: 0.5%;\" href=\"/g/" + key[strlen(db_prefix + "subgreenit:")..] + "\">g/" + key[strlen(db_prefix + "subgreenit:")..] + "</a>";
+					out += "<a style=\"margin-right: 0.5%;\" href=\"/g/" + key[strlen(db_prefix + "subgreenit:")..] + "/\">g/" + key[strlen(db_prefix + "subgreenit:")..] + "</a>";
 				}
 			}
 			else
@@ -28,10 +30,10 @@
 	</div>
 	<div class="banner">
 		<div class="banner_options">
-			<h1>Greenit g/all</h1>
+			<h1>Greenit <%= banner_current_subgreenit(request->not_query) %></h1>
 		</div>
 		<div class="banner_options">
-			<a href="/">home</a> | <a href="/g/all/new">new</a> | <a href="/g/all/popular">popular</a> | <a href="/g/all/controversial">controversial</a>
+			<a href="/"><b>greenit home page</b></a><b> | subgreenit controls:</b> <a href="/<%= (in_subgreenit(request->not_query)) ? banner_current_subgreenit(request->not_query) : "g/all" %>/">home</a> | <a href="/<%= (in_subgreenit(request->not_query)) ? banner_current_subgreenit(request->not_query) : "g/all" %>/new/">new</a> | <a href="/<%= (in_subgreenit(request->not_query)) ? banner_current_subgreenit(request->not_query) : "g/all" %>/popular/">popular</a> | <a href="/<%= (in_subgreenit(request->not_query)) ? banner_current_subgreenit(request->not_query) : "g/all" %>/controversial/">controversial</a>
 		</div>
 	</div>
 	<div class="main_content">

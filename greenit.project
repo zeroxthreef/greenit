@@ -76,6 +76,7 @@
         <File Name="src/html/elements/account.psp"/>
         <File Name="src/html/elements/g.psp"/>
         <File Name="src/html/elements/util.psp"/>
+        <File Name="src/html/elements/greenit.psp"/>
       </VirtualDirectory>
       <File Name="src/html/style.css"/>
       <VirtualDirectory Name="login">

@@ -10,6 +10,9 @@ html, body {
 	padding: 0.3%;
 	width: 99.4%;
 	background-color: #71E75D;
+	white-space:nowrap;
+	overflow-y: hidden;
+	overflow-x: auto;
 }
 
 .banner

@@ -2,7 +2,7 @@
 	//control the globals and the redis db connection
 	import redis_client;
 	
-	int first = 1, connected = 0;
+	int first = 1, connected = 0, page_num = 0;
 	Redis db;
 	//IMPORTANT. I dev on the same redis db for all of my projects so I have to set it to another index
 	int db_index = 2;
@@ -33,7 +33,7 @@
 		if(token)
 		{
 			string key = db->get(db_prefix + "token:" + replace(token, "\r\n", ""));
-			return db->hget( replace(key, "\r\n", ""), "username");
+			return replace(db->hget(replace(key, "\r\n", ""), "username"), "\r\n", "");
 		}
 		return "";
 	}
@@ -56,6 +56,13 @@
 		
 		return 1;
 	}
+	
+	string trim_uri(string query)
+	{
+		array(string) temp = query / "?";
+		return temp[0];
+	}
+	
 %>
 
 <%
@@ -74,7 +81,19 @@
 		else
 			write("unable to connecto to redis db\n");
 		
+		
+		// make sure the /g/all subgreenit exists
+		if(!db->exists("greenit:subgreenit:all"))
+		{
+			db->hmset(db_prefix + "subgreenit:all", "name", "all", "creator","greenit", "about", "The main landing page for greenit", "date_created", Protocols.HTTP.Server.http_date(time()));
+			db->lpush(db_prefix + "variable:subgreenits" ,db_prefix + "subgreenit:all");
+			write("the g/all subgreenit was created\n");
+		}
+		
 		//==================
 		first = 0;
 	}
+	//this gets corrupted for whatever reason
+	page_num = (int)request->variables->p;
+	write("hey " + page_num + "\n");
 %>

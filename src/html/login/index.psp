@@ -29,7 +29,6 @@
 				}
 				else
 					out += "user does not exist";
-				
 			}
 		%>
 		<form action="/login/" method="post">
