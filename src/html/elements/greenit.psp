@@ -39,11 +39,25 @@
 	string get_comments_post(string uri)
 	{
 		array(string) post = uri / "/";
+		string response = "";
 		
-		if(sizeof(post[4])) //make sure theres a path to a post
+		if(sizeof(post) > 3) //make sure theres a path to a post
 		{
+			string key = db_prefix + "post:" + current_subgreenit(uri) + ":" + post[4];
 			
+			if(db->exists(key))
+			{
+				response = "<h1>" + db->hget(key, "title") + "</h1>";
+				response += "<div class=\"post\">Posted by " + db->hget(key, "creator") + "<div class=\"post_content\">" + format_parse(db->hget(key, "body")) + "</div>" + db->hget(key, "post_date") + "</div>";
+			}
+			else
+				response = "post does not exist";
+				
 		}
+		else
+			response = "post retrieval error";
+		
+		return response;
 	}
 	
 	string get_comments(string uri)
@@ -296,7 +310,7 @@
 		
 		if(sizeof(vid_open) == sizeof(vid_close))
 		{
-			final_str = vid_open * "<iframe style=\"\width: 100%;\" src=\"https://www.youtube.com/embed/";
+			final_str = vid_open * "<iframe style=\"\width: 94%; height: 400px;\" src=\"https://www.youtube.com/embed/";
 			array(string) vid_close2 = final_str / "[/video]";
 			final_str = vid_close2 * "\"></iframe>";
 		}

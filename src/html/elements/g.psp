@@ -89,6 +89,9 @@
 			else if(sub_path == "comments") //the comments page
 			{
 				//draw the post and comments
+				out += get_comments_post(request->not_query);
+				out += "<hr></hr>";
+				out += "comments go here";
 			}
 			else
 				out += "youre in a place";
