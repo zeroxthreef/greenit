@@ -7,11 +7,43 @@
 				if(user_logged_in(request->cookies->token))
 					out += "<input type=\"button\" onclick=\"location.href=\'/g/" + current_subgreenit(request->not_query) + "/create/\'\" value=\"Create Post\" /><br><br>";
 				
+				//handle the css uploading and about test
+				if(request->method == "POST" && user_logged_in(request->cookies->token)) //allow the creator to change the about text
+				{
+					string key = db_prefix + "subgreenit:" + current_subgreenit(request->not_query);
+					
+					if(username_from_token(request->cookies->token) == replace(db->hget(key, "creator"), "\r\n", ""))
+					{
+						if(strlen(request->variables->about) > 2000)
+							out += "about string too long. Keep it under 2000 characters";
+						else
+						{
+							db->hset(key, "about", safe_about_string(request->variables->about));
+							out += "updated about text. go to subgreenit home to see changes";
+						}
+					}
+					else
+						out += "invalid permission";
+				}
 			}
 		%>
+		<%
+			//display the text box
+			string key = db_prefix + "subgreenit:" + current_subgreenit(request->not_query);
+			
+			if(username_from_token(request->cookies->token) == replace(db->hget(key, "creator"), "\r\n", ""))
+			{
+				out += "<form action=\"/g/" + current_subgreenit(request->not_query) + "/\" method=\"post\">\n\
+					Subgreenit about text:<br>\n\
+					<textarea name=\"about\" cols=\"30\" rows=\"10\"></textarea><br>\n\
+					<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
+				</form><br>";
+			}
+		%>
+		
 		Controls:
 		<hr></hr>
-		<a href="/account/<%=username_from_token(request->cookies->token)%>">My account</a><br><br>
+		<a href="/account/<%=username_from_token(request->cookies->token) %>">My account</a><br><br>
 		<% if(user_logged_in(request->cookies->token)) %>
 		<a href="/logout">Log out</a><br><br>
 		<% else %>

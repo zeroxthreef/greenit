@@ -9,7 +9,7 @@
 		db_page = page * POSTS_PER_PAGE;
 		db_end = db_page + POSTS_PER_PAGE;
 		
-		write("yo " + page * POSTS_PER_PAGE + " " + total + "\n");
+		//write("yo " + page * POSTS_PER_PAGE + " " + total + "\n");
 		
 		if(db_page <= total && total)
 		{
@@ -30,19 +30,29 @@
 		else if(!total)
 			final_str += "<h1>No posts. Feel free to create one</h1>";
 		else
-			final_str += "";
+			final_str += "<h1>No content</h1>";
 		
 		
 		return final_str;
+	}
+	
+	string get_comments(string uri)
+	{
+		
 	}
 	
 	string create_post_element(string key)
 	{
 		array(string) temp = key / ":";
 		
+		//the key is corrupted for whatever reason
+		string fixed_key = temp[0] +":" + temp[1] + ":" + temp[2] + ":" + replace(temp[3], "\r", "");
+		
+		write("hey \"%s\"\n", fixed_key);
+		
 		return "\n\
 		<div class=\"feed_object\">\n\
-			<div class=\"feed_object_updn_container\">(" + db->hget(key, "upvotes") + ") upvote<br>(" + db->hget(key, "downvotes")  + ") downvote</div><div class=\"feed_object_title_container\">" + unformat_title(temp[2]) + "</div>\n\
+			<div class=\"feed_object_updn_container\">(" + db->hget(key, "upvotes") + ") upvote<br>(" + db->hget(key, "downvotes")  + ") downvote</div><div class=\"feed_object_title_container\"><a href=\"" + "/g/" + db->hget(fixed_key, "parent") + "/comments/" + temp[3] + "\">" + db->hget(fixed_key, "title") + "</a></div>\n\
 		</div>";
 	}
 	
@@ -51,6 +61,66 @@
 		array(string) temp = title / "_";
 		
 		return temp * " ";
+	}
+	
+	string generate_nav(string uri)
+	{
+		array(string) sub_uri = trim_uri(uri) / "/";
+		int page = 0, other = 0, abort = 0;
+		string sub_path = "";
+		
+		if(uri == "/")
+		{
+			string base = "/g/all/p";
+			
+			string prev = base + (page - 1) + "/";
+			string next = base + (page + 1) + "/";
+			
+			return "<br><center><a href=\"" + prev + "\" >&ltprevious|</a>" + page + "<a href=\"" + next + "\" >|next&gt</a></center><br>";
+		}
+		
+		
+		
+		if(sizeof(sub_uri) > 2)
+			sub_path += sub_uri[3];
+		
+		if(sizeof(sub_path))
+		{
+			if(sub_path[0] == 'p' && sub_path[1] != 'o') //its the home page
+			{
+				string temp = sub_path[1..];
+				page = (int)temp;
+			}
+			else if(sub_path == "comments")
+				abort = 1;
+			else //its any other
+			{
+				if(sub_uri[4])
+				{
+					other++;
+					string temp = sub_uri[4][1..];
+					page = (int)temp;
+				}
+			}
+		}
+		
+		if(abort)
+			return "";
+		
+		//spit out a navigation string
+		string base = "/g/" + sub_uri[2] + "/";
+		
+		if(other)
+			base += sub_uri[3] + "/p";
+		else
+			base += "p";
+		
+		string prev = base + (page - 1) + "/";
+		string next = base + (page + 1) + "/";
+		
+		
+		
+		return "<br><center><a href=\"" + prev + "\" >&ltprevious|</a>" + page + "<a href=\"" + next + "\" >|next&gt</a></center><br>";
 	}
 	
 	
@@ -118,7 +188,7 @@
 		
 		for(int i = 0; i < strlen(title); i++)//make sure only alpha
 		{
-			if((title[i] < 32 || title[i] > 126))
+			if((title[i] < 32 || title[i] > 126 || title[i] == 95))
 				return 0;
 		}
 		
@@ -141,6 +211,26 @@
 		temp = final_str / ">";
 		
 		final_str = temp * "&gt";
+		
+		return final_str;
+	}
+	
+	string safe_about_string(string about)
+	{
+		string final_str;
+		array(string) temp;
+		
+		temp = about / "<";
+		
+		final_str = temp * "&lt";
+		
+		temp = final_str / ">";
+		
+		final_str = temp * "&gt";
+		
+		temp = final_str / "\n";
+		
+		final_str = temp * "<br>";
 		
 		return final_str;
 	}

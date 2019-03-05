@@ -85,7 +85,7 @@
 		// make sure the /g/all subgreenit exists
 		if(!db->exists("greenit:subgreenit:all"))
 		{
-			db->hmset(db_prefix + "subgreenit:all", "name", "all", "creator","greenit", "about", "The main landing page for greenit", "date_created", Protocols.HTTP.Server.http_date(time()));
+			db->hmset(db_prefix + "subgreenit:all", "name", "all", "creator","g", "about", "The main landing page for greenit", "date_created", Protocols.HTTP.Server.http_date(time()));
 			db->lpush(db_prefix + "variable:subgreenits" ,db_prefix + "subgreenit:all");
 			write("the g/all subgreenit was created\n");
 		}
