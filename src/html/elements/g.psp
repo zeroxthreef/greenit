@@ -21,38 +21,41 @@
 				//detect the page
 				int good = 0;
 				
-				
-				if(sizeof(sub_path))
+				if(subgreenit_exists(request->not_query))
 				{
-					if(sub_path[0] == 'p' && sub_path[1] != 'o') //its the home page
+					if(sizeof(sub_path))
 					{
-						string temp = sub_path[1..];
-						
-						int page = (int)temp;
-						out += get_subgreenit_posts(current_subgreenit(trim_uri(request->not_query)), sub_path, page);
-					}
-					else //its any other
-					{
-						if(sub_uri[4])
+						if(sub_path[0] == 'p' && sub_path[1] != 'o') //its the home page
 						{
-							string temp = sub_uri[4][1..];
+							string temp = sub_path[1..];
 							
 							int page = (int)temp;
 							out += get_subgreenit_posts(current_subgreenit(trim_uri(request->not_query)), sub_path, page);
 						}
-						else
-							out += get_subgreenit_posts(current_subgreenit(trim_uri(request->not_query)), sub_path, 0);
+						else //its any other
+						{
+							if(sub_uri[4])
+							{
+								string temp = sub_uri[4][1..];
+								
+								int page = (int)temp;
+								out += get_subgreenit_posts(current_subgreenit(trim_uri(request->not_query)), sub_path, page);
+							}
+							else
+								out += get_subgreenit_posts(current_subgreenit(trim_uri(request->not_query)), sub_path, 0);
+						}
 					}
+					else
+						out += get_subgreenit_posts(current_subgreenit(trim_uri(request->not_query)), sub_path, 0);
 				}
 				else
-					out += get_subgreenit_posts(current_subgreenit(trim_uri(request->not_query)), sub_path, 0);
-				
+					out += "<h1>Subgreenit has not been created. You can create it.</h1>";
 				
 			}
 			else if(sub_path == "create")
 			{
 				string response = "";
-				string format_notes = "Notes on formatting:<br><br>for videos, take the youtube video id (no ?=) place it between a [video]id_here[/video] tag.<br><br>for images, only imgur works. Copy an imgur image location and place everything after the imgur domain name between [img]image.png[/img]<br><br>For bold, underline, and italics, follow the same ide of opening and closing tags, but with [b][/b], [i],[/i], and [u],[/u]<br><br>";
+				
 				if(request->method == "POST" && user_logged_in(request->cookies->token))
 				{
 					//create the post db things
@@ -67,12 +70,14 @@
 						int r_num = random(5000000);
 						string sg_post_key = db_prefix + "post:" + current_subgreenit(request->not_query) + ":" + r_num + safe_title_string(request->variables->title);
 						
+						//TODO remke the key in a loop and make sure the random number never collides
+						
 						db->rpush(posts_key, sg_post_key);
 						
 						//create the post key
 						db->hmset(sg_post_key, "creator", username_from_token(request->cookies->token), "body", request->variables->body, "post_date", Protocols.HTTP.Server.http_date(time()), "upvotes", "0", "downvotes", "0", "parent", current_subgreenit(request->not_query), "title", request->variables->title);
 						
-						response += "Created post at <a href=\"/" + banner_current_subgreenit(request->not_query) + "/comments/" + safe_title_string(request->variables->title) + "\">" + banner_current_subgreenit(request->not_query) + "/comments/" + safe_title_string(request->variables->title) + "</a>";
+						response += "Created post at <a href=\"/" + banner_current_subgreenit(request->not_query) + "/comments/" + r_num + safe_title_string(request->variables->title) + "\">" + banner_current_subgreenit(request->not_query) + "/comments/" + r_num + safe_title_string(request->variables->title) + "</a>";
 					}
 					else
 						response += "Please keep the post title under 50 characters and over 3 characters long. Also must only contain printable characters and no underscores";
@@ -80,6 +85,10 @@
 				
 				out += format_notes + response;
 				out += get_create_form(current_subgreenit(request->not_query));
+			}
+			else if(sub_path == "comments") //the comments page
+			{
+				//draw the post and comments
 			}
 			else
 				out += "youre in a place";

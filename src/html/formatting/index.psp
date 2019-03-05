@@ -1,0 +1,15 @@
+<%@ include file="/elements/header.psp" %>
+	<div class="feed">
+	
+		<h1>Formatting tips</h1>
+		
+		<h3>Almost everything on this site uses a certain format to make text have more qualities</h3>
+		
+		<%= format_notes %>
+		
+	</div>
+	
+	<%@ include file="/elements/controls.psp" %>
+	
+</div>
+<%@ include file="/elements/footer.psp" %>

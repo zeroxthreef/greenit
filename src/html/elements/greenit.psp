@@ -36,6 +36,16 @@
 		return final_str;
 	}
 	
+	string get_comments_post(string uri)
+	{
+		array(string) post = uri / "/";
+		
+		if(sizeof(post[4])) //make sure theres a path to a post
+		{
+			
+		}
+	}
+	
 	string get_comments(string uri)
 	{
 		
@@ -77,6 +87,11 @@
 			string next = base + (page + 1) + "/";
 			
 			return "<br><center><a href=\"" + prev + "\" >&ltprevious|</a>" + page + "<a href=\"" + next + "\" >|next&gt</a></center><br>";
+		}
+		
+		if(!subgreenit_exists(uri))
+		{
+			return "<br><center>no pages</center><br>";
 		}
 		
 		
@@ -193,6 +208,13 @@
 		}
 		
 		return 1;
+	}
+	
+	int subgreenit_exists(string uri)
+	{
+		string key = db_prefix + "subgreenit:" + current_subgreenit(uri);
+		
+		return db->exists(key);
 	}
 	
 	string safe_title_string(string title)

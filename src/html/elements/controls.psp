@@ -1,11 +1,25 @@
 	<div class="controls">
+		Controls:
+		<hr></hr>
+		<a href="/account/<%=username_from_token(request->cookies->token) %>">My account</a><br><br>
+		<% if(user_logged_in(request->cookies->token)) %>
+		<a href="/logout">Log out</a><br><br>
+		<% else %>
+		<a href="/login">Log in/register</a><br><br>
+		<% %>
+		<a href="/sg/create">Create subgreenit</a><br><br>
+		<a href="/sg">What is a subgreenit</a><br><br>
+		<a href="/formatting">Text formatting</a><br><br>
+		
 		<%
 			if(in_subgreenit(request->not_query))
 			{
 				out += banner_current_subgreenit(request->not_query) + ":<hr></hr>";
-				out += format_parse(db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about")) + "<br><br>";
 				if(user_logged_in(request->cookies->token))
 					out += "<input type=\"button\" onclick=\"location.href=\'/g/" + current_subgreenit(request->not_query) + "/create/\'\" value=\"Create Post\" /><br><br>";
+				
+				out += format_parse(db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about")) + "<br><br>";
+				
 				
 				//handle the css uploading and about test
 				array(string) temp = request->not_query / "/";
@@ -33,27 +47,23 @@
 		%>
 		<%
 			//display the text box
+			
 			string key = db_prefix + "subgreenit:" + current_subgreenit(request->not_query);
 			
-			if(username_from_token(request->cookies->token) == replace(db->hget(key, "creator"), "\r\n", ""))
-			{
-				out += "<form action=\"/g/" + current_subgreenit(request->not_query) + "/\" method=\"post\">\n\
-					Subgreenit about text:<br>\n\
-					<textarea name=\"about\" cols=\"30\" rows=\"10\">" + db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about") + "</textarea><br>\n\
-					<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
-				</form><br>";
-			}
+			if(subgreenit_exists(request->not_query))
+				if(username_from_token(request->cookies->token) == replace(db->hget(key, "creator"), "\r\n", ""))
+				{
+					//TODO delete this once the css system works
+					
+					out += "Custom CSS coming soon<br><br>";
+					
+					out += "<form action=\"/g/" + current_subgreenit(request->not_query) + "/\" method=\"post\">\n\
+						Subgreenit about text:<br>\n\
+						<textarea name=\"about\" cols=\"30\" rows=\"10\">" + db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about") + "</textarea><br>\n\
+						<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
+					</form><br>";
+				}
+			
 		%>
-		
-		Controls:
-		<hr></hr>
-		<a href="/account/<%=username_from_token(request->cookies->token) %>">My account</a><br><br>
-		<% if(user_logged_in(request->cookies->token)) %>
-		<a href="/logout">Log out</a><br><br>
-		<% else %>
-		<a href="/login">Log in/register</a><br><br>
-		<% %>
-		<a href="/sg/create">Create subgreenit</a><br><br>
-		<a href="/sg">What is a subgreenit</a><br><br>
 		
 	</div>
