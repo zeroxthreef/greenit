@@ -72,7 +72,7 @@
 						
 						//TODO remke the key in a loop and make sure the random number never collides
 						
-						db->rpush(posts_key, sg_post_key);
+						db->lpush(posts_key, sg_post_key);
 						
 						//create the post key
 						db->hmset(sg_post_key, "creator", username_from_token(request->cookies->token), "body", request->variables->body, "post_date", Protocols.HTTP.Server.http_date(time()), "upvotes", "0", "downvotes", "0", "parent", current_subgreenit(request->not_query), "title", request->variables->title);

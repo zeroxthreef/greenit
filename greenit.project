@@ -81,6 +81,7 @@
       <File Name="src/html/style.css"/>
       <VirtualDirectory Name="login">
         <File Name="src/html/login/index.psp"/>
+        <File Name="src/html/login/login.pike"/>
       </VirtualDirectory>
       <VirtualDirectory Name="register">
         <File Name="src/html/register/index.psp"/>
@@ -93,6 +94,7 @@
       </VirtualDirectory>
       <VirtualDirectory Name="logout">
         <File Name="src/html/logout/index.psp"/>
+        <File Name="src/html/logout/logout.pike"/>
       </VirtualDirectory>
       <VirtualDirectory Name="formatting">
         <File Name="src/html/formatting/index.psp"/>

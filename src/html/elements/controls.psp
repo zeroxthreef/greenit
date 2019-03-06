@@ -1,7 +1,7 @@
 	<div class="controls">
 		Controls:
 		<hr></hr>
-		<a href="/account/<%=username_from_token(request->cookies->token) %>">My account</a><br><br>
+		<a href="/account/<%=username_from_token(request->cookies->token) %>"><% if(user_logged_in(request->cookies->token)) %>My account<% else %><% %></a><% if(user_logged_in(request->cookies->token)) %><br><br><% else %><% %>
 		<% if(user_logged_in(request->cookies->token)) %>
 		<a href="/logout">Log out</a><br><br>
 		<% else %>

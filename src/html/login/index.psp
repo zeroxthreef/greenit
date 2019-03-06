@@ -16,13 +16,24 @@
 				{
 					if(Crypto.Password.verify(request->variables->password, db->hget(user_key, "password")))
 					{
-						out += "logging in";
+						string temp_place = replace(replace(replace(MIME.encode(Crypto.Random.random_string(30), "base64"), "=", ""), "+", ""), "/", "");
+						string cook_key = db_prefix + "variable:login:" + temp_place; //haha cook key
 						
-						mapping ret = HTTP.set_cookie("token", db->hget(user_key, "token"), time() + 604800, request);
+						db->set(cook_key, db->hget(user_key, "token"));
+						db->expire(cook_key, 60 * 3); //3 minutes of temporary link life should be good enough
+						
+						out += "logging in. If you arent redirected, <a href=\"/login/login.pike?tmp=" + temp_place + "\">click here</a>";
+						
+						//mapping ret = HTTP.set_cookie("token", db->hget(user_key, "token"), time() + 604800, request);
 						
 						//scriptrunner wont let you set headers or cookies.... great...
 						//this is ridiculous
-						out += "<script>document.cookie =\"" + ret->_headers["set-cookie"] + "\"</script>";
+						//out += "<script>document.cookie =\"" + ret->_headers["set-cookie"] + "\"</script>";
+						
+						//a new alternative: multiple redirects :(
+						
+						out += "<meta http-equiv=\"refresh\" content=\"0; url=\'/login/login.pike?tmp=" + temp_place + "\'\" />";
+						
 					}
 					else
 						out += "incorrect password";

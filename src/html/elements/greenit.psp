@@ -53,7 +53,8 @@
 			
 			if(db->exists(key))
 			{
-				response = "<h1>" + db->hget(key, "title") + "</h1>";
+				response = "<div class=\"flair\">" + "thing" + "</div>";
+				response += "<h1>" + db->hget(key, "title") + "</h1>";
 				response += "<div class=\"post\">Posted by " + db->hget(key, "creator") + "<div class=\"post_content\">" + format_parse(db->hget(key, "body")) + "</div>" + db->hget(key, "post_date") + "</div>";
 			}
 			else

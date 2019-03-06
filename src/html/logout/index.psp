@@ -7,12 +7,13 @@
 			
 			if(user_logged_in(request->cookies->token))
 			{
-				mapping ret = HTTP.set_cookie("token", request->cookies->token, time() - 4000, request);
+				//mapping ret = HTTP.set_cookie("token", request->cookies->token, time() - 4000, request);
 				
 				//scriptrunner wont let you set headers or cookies.... great...
 				//this is ridiculous
-				out += "<script>document.cookie =\"" + ret->_headers["set-cookie"] + "\"</script>";
-				out += "logout successful";
+				//out += "<script>document.cookie =\"" + ret->_headers["set-cookie"] + "\"</script>";
+				out += "Logging out... If you arent redirected automatically, <a href=\"/logout/logout.pike\">click here</a>";
+				out += "<meta http-equiv=\"refresh\" content=\"0; url=\'/logout/logout.pike\'\" />";
 			}
 			else
 				out += "you arent logged in";
