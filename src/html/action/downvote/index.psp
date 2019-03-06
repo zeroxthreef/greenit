@@ -1,0 +1,6 @@
+<%@ include file="/elements/util.psp" %>
+<%@ include file="/elements/greenit.psp" %>
+<html>
+<link href="/style.css" rel="stylesheet" type="text/css">
+(0)Vdownvote
+</html>

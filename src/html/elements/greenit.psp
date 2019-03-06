@@ -23,7 +23,13 @@
 			//new only
 			
 			foreach(posts, string key)
+			{
+				//WOW this is slow
+				//int timetaken = gethrtime(), finaltime = 0;
 				final_str += create_post_element(key);
+				//finaltime = gethrtime();
+				//write("time taken " + ((finaltime - timetaken)/1000) + "\n");
+			}
 			
 			
 		}
@@ -74,9 +80,15 @@
 		
 		//write("hey \"%s\"\n", fixed_key);
 		
+		/*
 		return "\n\
 		<div class=\"feed_object\">\n\
-			<div class=\"feed_object_updn_container\">(" + db->hget(key, "upvotes") + ") upvote<br>(" + db->hget(key, "downvotes")  + ") downvote</div><div class=\"feed_object_title_container\"><a href=\"" + "/g/" + db->hget(fixed_key, "parent") + "/comments/" + temp[3] + "\">" + db->hget(fixed_key, "title") + "</a></div>\n\
+			<div class=\"feed_object_updn_container\">(" + db->hget(fixed_key, "upvotes") + ") upvote<br>(" + db->hget(fixed_key, "downvotes")  + ") downvote</div><div class=\"feed_object_title_container\"><a href=\"" + "/g/" + db->hget(fixed_key, "parent") + "/comments/" + temp[3] + "\">" + db->hget(fixed_key, "title") + "</a></div>\n\
+		</div>";
+		*/
+		return "\n\
+		<div class=\"feed_object\">\n\
+			<div class=\"feed_object_updn_container\"><iframe class=\"uv_dv\" src=\"/action/upvote?c=" + replace(temp[3], "\r", "") +"&g=" + temp[2] + "\"></iframe><br><iframe class=\"uv_dv\" src=\"/action/downvote?c=" + replace(temp[3], "\r", "") +"&g=" + temp[2] + "\"></iframe><br></div><div class=\"feed_object_title_container\"><a href=\"" + "/g/" + db->hget(fixed_key, "parent") + "/comments/" + temp[3] + "\">" + db->hget(fixed_key, "title") + "</a></div>\n\
 		</div>";
 	}
 	

@@ -1,0 +1,11 @@
+<%@ include file="/elements/util.psp" %>
+<%@ include file="/elements/greenit.psp" %>
+<html>
+<link href="/style.css" rel="stylesheet" type="text/css">
+<%
+//check the users upvote list
+	string key = db_prefix + //TODo user name +
+	if(db->hget)
+%>
+(0)^upvote, hey <%=request->variables->c %> and <%= request->variables->g %>
+</html>

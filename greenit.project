@@ -97,6 +97,14 @@
       <VirtualDirectory Name="formatting">
         <File Name="src/html/formatting/index.psp"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="action">
+        <VirtualDirectory Name="upvote">
+          <File Name="src/html/action/upvote/index.psp"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="downvote">
+          <File Name="src/html/action/downvote/index.psp"/>
+        </VirtualDirectory>
+      </VirtualDirectory>
     </VirtualDirectory>
     <File Name="src/greenit_scgi_params"/>
     <File Name="src/greenit.conf"/>

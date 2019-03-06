@@ -65,6 +65,25 @@
 		return temp[0];
 	}
 	
+	mixed get_hash_value(array(mixed) hash, mixed value)
+	{
+		if(hash)
+		{
+			
+			for(int i = 0; i < sizeof(hash); i++)
+			{
+				write("woohoo %s\n", (string)hash[i]);
+				
+				if(hash == value)
+					return hash[i + 1];
+			}
+		}
+		else
+			write("fuck\n");
+		
+		return 0;
+	}
+	
 %>
 
 <%
