@@ -2,5 +2,66 @@
 <%@ include file="/elements/greenit.psp" %>
 <html>
 <link href="/style.css" rel="stylesheet" type="text/css">
-(0)Vdownvote
+<%
+	//check the users downvote list
+	string post_key = db_prefix + "post:" + request->variables->g + ":" + request->variables->c;
+	
+	//out += "(" + (int)db->hget(post_key, "downvotes")+ ")V";
+	out +="V";
+	
+	if(user_logged_in(request->cookies->token))
+	{
+		string key = db_prefix + "user:" +  username_from_token(request->cookies->token) + ":downvotes";
+		int already_downvoted = 0;
+		array(string) downvotes = db->lrange(key, 0, -1);
+		
+		foreach(downvotes, string u_downvote) //check if already downvoted
+		{
+			
+			if(post_key == replace(replace(u_downvote, "\r", ""), "\n", ""))
+			{
+				already_downvoted = 1;
+				break;
+			}
+		}
+		
+		if(already_downvoted)
+		{
+			//allow un-downvoting
+			
+			//check if undownvoting
+			if((int)request->variables->u == 0 && request->variables->u)
+			{
+				out += "<a href=\"/action/downvote/?c=" + request->variables->c + "&g=" + request->variables->g + "&u=1\">downvote</a>";
+				db->hincrby(post_key, "downvotes", -1);
+				db->lrem(key, 0, post_key);
+			}
+			else
+			{
+				out += "<a href=\"/action/downvote/?c=" + request->variables->c + "&g=" + request->variables->g + "&u=0\">downvoted</a>";
+			}
+		}
+		else
+		{
+			//allow downvoting
+			
+			//check if downvoting
+			if((int)request->variables->u == 1)
+			{
+				out += "<a href=\"/action/downvote/?c=" + request->variables->c + "&g=" + request->variables->g + "&u=0\">downvoted</a>";
+				db->hincrby(post_key, "downvotes", 1);
+				db->lpush(key, post_key);
+			}
+			else
+			{
+				out += "<a href=\"/action/downvote/?c=" + request->variables->c + "&g=" + request->variables->g + "&u=1\">downvote</a>";
+			}
+		}
+		
+	}
+	else
+	{
+		out += "downvote";
+	}
+%>
 </html>

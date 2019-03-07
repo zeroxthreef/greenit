@@ -69,6 +69,7 @@
 					{
 						int r_num = random(5000000);
 						string sg_post_key = db_prefix + "post:" + current_subgreenit(request->not_query) + ":" + r_num + safe_title_string(request->variables->title);
+						string user_post_key = db_prefix + "user:" + username_from_token(request->cookies->token) + ":posts";
 						
 						//TODO remke the key in a loop and make sure the random number never collides
 						
@@ -76,6 +77,8 @@
 						
 						//create the post key
 						db->hmset(sg_post_key, "creator", username_from_token(request->cookies->token), "body", request->variables->body, "post_date", Protocols.HTTP.Server.http_date(time()), "upvotes", "0", "downvotes", "0", "parent", current_subgreenit(request->not_query), "title", request->variables->title);
+						//add this post to the users post counter
+						db->lpush(user_post_key, sg_post_key);
 						
 						response += "Created post at <a href=\"/" + banner_current_subgreenit(request->not_query) + "/comments/" + r_num + safe_title_string(request->variables->title) + "\">" + banner_current_subgreenit(request->not_query) + "/comments/" + r_num + safe_title_string(request->variables->title) + "</a>";
 					}

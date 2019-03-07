@@ -84,6 +84,12 @@
 		return 0;
 	}
 	
+	//for whatever reason, this pike redis client corrupts things
+	string decorrupt(string input)
+	{
+		return replace(replace(input, "\r", ""), "\n", "");
+	}
+	
 %>
 
 <%

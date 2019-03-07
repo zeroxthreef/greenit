@@ -72,9 +72,11 @@ iframe
 
 .feed_object_title_container
 {
-	margin-left: 100px;
+	padding-left: 40px;
 	display: inline-block;
 	float: left;
+	border-left: 2px solid #91A582;
+	height: 100%;
 }
 
 .post
@@ -96,6 +98,16 @@ iframe
 
 .uv_dv
 {
-	width: 100px;
+	width: 120px;
 	height: 30px;
+}
+
+.flair
+{
+	padding: 3px;
+	display: inline-block;
+	border: 2px solid grey;
+	background-color: lightgrey;
+	border-radius: 3px;
+	margin-left: 0.8%;
 }

@@ -3,9 +3,65 @@
 <html>
 <link href="/style.css" rel="stylesheet" type="text/css">
 <%
-//check the users upvote list
-	string key = db_prefix + //TODo user name +
-	if(db->hget)
+	//check the users upvote list
+	string post_key = db_prefix + "post:" + request->variables->g + ":" + request->variables->c;
+	
+	//out += "(" + (int)db->hget(post_key, "upvotes")+ ")^";
+	out += "^";
+	
+	if(user_logged_in(request->cookies->token))
+	{
+		string key = db_prefix + "user:" +  username_from_token(request->cookies->token) + ":upvotes";
+		int already_upvoted = 0;
+		array(string) upvotes = db->lrange(key, 0, -1);
+		
+		foreach(upvotes, string u_upvote) //check if already upvoted
+		{
+			
+			if(post_key == replace(replace(u_upvote, "\r", ""), "\n", ""))
+			{
+				already_upvoted = 1;
+				break;
+			}
+		}
+		
+		if(already_upvoted)
+		{
+			//allow un-upvoting
+			
+			//check if unupvoting
+			if((int)request->variables->u == 0 && request->variables->u)
+			{
+				out += "<a href=\"/action/upvote/?c=" + request->variables->c + "&g=" + request->variables->g + "&u=1\">upvote</a>";
+				db->hincrby(post_key, "upvotes", -1);
+				db->lrem(key, 0, post_key);
+			}
+			else
+			{
+				out += "<a href=\"/action/upvote/?c=" + request->variables->c + "&g=" + request->variables->g + "&u=0\">upvoted</a>";
+			}
+		}
+		else
+		{
+			//allow upvoting
+			
+			//check if upvoting
+			if((int)request->variables->u == 1)
+			{
+				out += "<a href=\"/action/upvote/?c=" + request->variables->c + "&g=" + request->variables->g + "&u=0\">upvoted</a>";
+				db->hincrby(post_key, "upvotes", 1);
+				db->lpush(key, post_key);
+			}
+			else
+			{
+				out += "<a href=\"/action/upvote/?c=" + request->variables->c + "&g=" + request->variables->g + "&u=1\">upvote</a>";
+			}
+		}
+		
+	}
+	else
+	{
+		out += "upvote";
+	}
 %>
-(0)^upvote, hey <%=request->variables->c %> and <%= request->variables->g %>
 </html>
