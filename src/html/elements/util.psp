@@ -35,7 +35,15 @@
 		if(token)
 		{
 			string key = db->get(db_prefix + "token:" + replace(token, "\r\n", ""));
-			return replace(db->hget(replace(key, "\r\n", ""), "username"), "\r\n", "");
+			string response;
+			
+			if(key)
+				response = db->hget(replace(key, "\r\n", ""), "username");
+			
+			if(response)
+				return replace(response, "\r\n", "");
+			else
+				return "";
 		}
 		return "";
 	}
