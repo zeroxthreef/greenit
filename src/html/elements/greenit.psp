@@ -1,5 +1,6 @@
 <%!
 	#define POSTS_PER_PAGE 9
+	
 	string get_subgreenit_posts(string sg, string location, int page)
 	{
 		string final_str = "", posts_key = db_prefix + "variable:" + sg + ":posts";
@@ -58,11 +59,11 @@
 				if(strlen(body) < 1)
 					response += "<div class=\"flair\">" + "Title only" + "</div>";
 				
-				response += "<h1>" + db->hget(key, "title") + "</h1>";
-				response += "<h3>" + ((int)db->hget(key, "upvotes") - (int)db->hget(key, "downvotes")) + "</h3>";
+				response += "<h1>" + db->hget(key, "title") + "</h1><div class=\"above_post\">";
+				response += "<h3>Net votes: " + ((int)db->hget(key, "upvotes") - (int)db->hget(key, "downvotes")) + "</h3>";
 				response += "<iframe class=\"uv_dv\" src=\"/action/upvote?c=" + replace(post[4], "\r", "") +"&g=" + current_subgreenit(uri) + "\"></iframe><br>";
 				response += "<iframe class=\"uv_dv\" src=\"/action/downvote?c=" + replace(post[4], "\r", "") +"&g=" + current_subgreenit(uri) + "\"></iframe><br>";
-				response += "<div class=\"post\">Posted by " + db->hget(key, "creator") + "<div class=\"post_content\">" + format_parse(db->hget(key, "body")) + "</div>" + db->hget(key, "post_date") + "</div>";
+				response += "</div><div class=\"post\">Posted by " + db->hget(key, "creator") + "<div class=\"post_content\">" + format_parse(db->hget(key, "body")) + "</div>" + db->hget(key, "post_date") + "</div>";
 			}
 			else
 				response = "post does not exist";
@@ -269,6 +270,10 @@
 		temp = final_str / ">";
 		
 		final_str = temp * "&gt";
+		
+		temp = final_str / "%";
+		
+		final_str = temp * "";
 		
 		return final_str;
 	}
