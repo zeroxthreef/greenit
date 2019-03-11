@@ -5,7 +5,7 @@ int db_index = 2;
 
 mixed parse(object id)
 {
-	Redis db = Redis();
+	Redis db = Redis(0, 0, "/var/run/redis/redis.sock");
 	string key = "greenit:variable:login:" + id->variables->tmp;
 	
 	//connect, set the db location, then do thing

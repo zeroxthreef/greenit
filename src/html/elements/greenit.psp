@@ -1,16 +1,15 @@
 <%!
-	#define POSTS_PER_PAGE 9
-	
 	string get_subgreenit_posts(string sg, string location, int page)
 	{
 		string final_str = "", posts_key = db_prefix + "variable:" + sg + ":posts";
 		array(string) posts;
 		int db_page = 0, db_end = 0, total = db->llen(posts_key);
+		int posts_per_page = (int)db->get(db_prefix + "variable:ppp");
 		
-		db_page = page * POSTS_PER_PAGE;
-		db_end = db_page + POSTS_PER_PAGE;
+		db_page = page * posts_per_page;
+		db_end = db_page + posts_per_page;
 		
-		//write("yo " + page * POSTS_PER_PAGE + " " + total + "\n");
+		//write("yo " + page * posts_per_page + " " + total + "\n");
 		
 		if(db_page <= total && total)
 		{

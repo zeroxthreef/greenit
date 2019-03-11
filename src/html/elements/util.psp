@@ -129,6 +129,9 @@
 			db->hmset(db_prefix + "subgreenit:" + default_subgreenit_name, "name", default_subgreenit_name, "creator","g", "about", default_subgreenit_sidebar, "date_created", Protocols.HTTP.Server.http_date(time()));
 			db->lpush(db_prefix + "variable:subgreenits" ,db_prefix + "subgreenit:" + default_subgreenit_name);
 			
+			//add the default posts per page
+			db->set(db_prefix + "variable:ppp",config_get(config_location, "general", "subgreenit_post_per_page"));
+			
 			
 			//at the very end, ad dthe setup key
 			db->set(db_prefix + "variable:setup", "1");

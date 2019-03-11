@@ -46,12 +46,18 @@
 					string response, token = MIME.encode(Crypto.Random.random_string(20), "base64");
 					string hash_pw = Crypto.Password.hash(request->variables->password, "ssha"); //yes this is bad, but I couldnt figure out the one without salt appended
 					
+					
+					//TODO remove token from users hash
 					response = db->hmset(user_key, "username", username, "password", hash_pw, "token", token, "date_created", Protocols.HTTP.Server.http_date(time()));
 					
 					db->set("greenit:token:" + token, user_key);
 					
+					//if this is the first user, add them to the admin list
+					if((int)db->llen(db_prefix + "variable:admins") == 0)
+						db->lpush(db_prefix + "variable:admins", user_key);
 					
-					if(search(response, "OK"))
+					
+					if(search(response, "OK "))
 						out += "added user. Log into your account on the login page";
 					else
 						out += "unable to create user for whatever reason: \"" + response + "\"";
