@@ -1,14 +1,16 @@
+<%@ include file="/elements/conf_parser.psp" %>
 <%!
 	//control the globals and the redis db connection
 	import redis_client;
+	//#include "conf_parser.pike"
 	
 	int first = 1, connected = 0, page_num = 0;
 	Redis db;
 	//IMPORTANT. I dev on the same redis db for all of my projects so I have to set it to another index
 	int db_index = 2;
 	
+	string config_location = "html/elements/defaults.conf";
 	string db_prefix = "greenit:";
-	string default_all_text = "Hello, this is the \"main\" page where posts are. This is just like Reddit but worse. Theres no crossposting so you're just gonna have to link or something if you wanna make posts in other subgreenits appear here. \n\n\n[b]g/all rules(more like suggestions) -[/b]\n\n* Since this is the very first page people see on this terrible site, don't post anything illegal and other bad stuff y'know.\n\n*If you really wanna break this site, keep that stuff in [b]g/breakme[/b] [url]/g/breakme/[/url] if it exists.\n\n* Please don't spam this subgreenit. The way I retrieve posts is pretty bad and it goes kinda slow with a lot of stuff.\n\n* This is just an experiment, I don't take it too seriously so these \"rules\" arent super important to me. I just don't wanna have to hunt through the db to fix things because I don't really have time for it.";
 	string format_notes = "Notes on formatting:<br><br>for videos, take the youtube video id (no ?=) place it between a [video]id_here[/video] tag.<br><br>for images, only imgur works. Copy an imgur image location and place everything after the imgur domain name between [img]image.png[/img]<br><br>For bold, underline, and italics, follow the same ide of opening and closing tags, but with [b][/b], [i],[/i], and [u],[/u]<br><br>";
 	
 	//=========================
@@ -105,7 +107,7 @@
 	if(first)
 	{
 		write("connecting to redis db\n");
-		db = Redis();
+		db = Redis(0, 0, "/var/run/redis/redis.sock");
 		db->connect();
 		
 		if(db->ping() && db->select(db_index))
@@ -116,12 +118,20 @@
 		else
 			write("unable to connecto to redis db\n");
 		
-		
-		// make sure the /g/all subgreenit exists
-		if(!db->exists("greenit:subgreenit:all"))
+		// make sure the db is set up with everything it needs
+		if(!db->exists(db_prefix + "variable:setup"))
 		{
-			db->hmset(db_prefix + "subgreenit:all", "name", "all", "creator","g", "about", default_all_text, "date_created", Protocols.HTTP.Server.http_date(time()));
-			db->lpush(db_prefix + "variable:subgreenits" ,db_prefix + "subgreenit:all");
+			string default_subgreenit_name = config_get(config_location, "default_subgreenit", "name");
+			string default_subgreenit_sidebar = config_get(config_location, "default_subgreenit", "sidebar_text");
+			
+			
+			//add the default subgreenit
+			db->hmset(db_prefix + "subgreenit:" + default_subgreenit_name, "name", default_subgreenit_name, "creator","g", "about", default_subgreenit_sidebar, "date_created", Protocols.HTTP.Server.http_date(time()));
+			db->lpush(db_prefix + "variable:subgreenits" ,db_prefix + "subgreenit:" + default_subgreenit_name);
+			
+			
+			//at the very end, ad dthe setup key
+			db->set(db_prefix + "variable:setup", "1");
 			write("the g/all subgreenit was created\n");
 		}
 		

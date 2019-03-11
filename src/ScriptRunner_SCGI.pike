@@ -5,7 +5,7 @@ inherit ScriptRunner.Runner;
 
 constant my_version = "0.4";
 
-#define RUN_THREADED
+#define RUN_THREADED 20
 
 string session_storagetype = "ram";
 string session_storagedir = ""; // not required for ram storage.

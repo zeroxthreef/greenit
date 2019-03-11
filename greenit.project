@@ -77,6 +77,8 @@
         <File Name="src/html/elements/g.psp"/>
         <File Name="src/html/elements/util.psp"/>
         <File Name="src/html/elements/greenit.psp"/>
+        <File Name="src/html/elements/defaults.conf"/>
+        <File Name="src/html/elements/conf_parser.psp"/>
       </VirtualDirectory>
       <File Name="src/html/style.css"/>
       <VirtualDirectory Name="login">
@@ -112,4 +114,5 @@
     <File Name="src/greenit.conf"/>
     <File Name="src/install.sh"/>
   </VirtualDirectory>
+  <Dependencies Name="Debug"/>
 </CodeLite_Project>

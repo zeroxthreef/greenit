@@ -1,0 +1,43 @@
+<%!
+string config_get(string config_file, string container, string variable)
+{
+	string current_container = "", config = Stdio.read_file(config_file);
+	string last_identifier = "", setting, data;
+	
+	if(!config)
+		error("no config file\n");
+	
+	//filter tabs
+	config = replace(config, "\t", "");
+	
+	array(string) lines = config / "\n";
+	
+	foreach(lines, string line)
+	{
+		if(line[0..0] == "#" || strlen(line) == 0)
+			continue;
+		
+		if(line == "{")
+			current_container = last_identifier;
+		else if(line == "}")
+			current_container = "";
+		else
+			last_identifier = line;	
+		
+		if(search(line, "="))
+		{
+			setting = line[0..search(line, "=") - 2];
+			data = line[search(line, "=") + 2..];
+			
+			data = replace(data, "\\t", "\t");
+			data = replace(data, "\\n", "\n");
+			data = replace(data, "\\\\", "\\");
+			
+			if(current_container == container && variable == setting)
+				return data;
+		}
+		
+	}
+	
+}
+%>
