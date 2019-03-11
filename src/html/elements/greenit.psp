@@ -117,7 +117,7 @@
 		
 		if(uri == "/")
 		{
-			string base = "/g/all/p";
+			string base = "/g/" + db->get(db_prefix + "variable:setup") + "/p";
 			
 			string prev = base + (page - 1) + "/";
 			string next = base + (page + 1) + "/";
@@ -177,28 +177,19 @@
 	
 	string current_subgreenit(string query)
 	{
+		array(string) path = query / "/";
+		
 		if(query == "/")
 			return "all";
-		else if(query[..strlen("/g")] != "/g/")
+		else if(path[1] != "g")
 			return "";
 		
 		if(query != "/")
 		{
-			string temp_str = query[strlen("/g/")..], final_str = "";
-			
-			if(search(temp_str, "/") != 0)
-			{
-				//write("hey %s\n", temp_str);
-				for(int i = 0; i < strlen(temp_str); i++)
-				{
-					if(temp_str[i] != '/')
-						final_str += temp_str[i..i+0];
-					else
-						return final_str;
-				}
-			}
+			if(path[2])
+				return path[2];
 			else
-				return temp_str;
+				return "";
 			
 		}
 		

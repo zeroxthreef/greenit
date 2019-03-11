@@ -67,16 +67,21 @@
 					
 					else if(is_clean_title_string(request->variables->title))
 					{
-						int r_num = random(5000000);
-						string sg_post_key = db_prefix + "post:" + current_subgreenit(request->not_query) + ":" + r_num + safe_title_string(request->variables->title);
+						int r_num;
+						string sg_post_key;
 						string user_post_key = db_prefix + "user:" + username_from_token(request->cookies->token) + ":posts";
 						
-						//TODO remke the key in a loop and make sure the random number never collides
+						//remke the key in a loop and make sure the random number never collides
+						do
+						{
+							r_num = random(50000000); //50 mil should be adequate enough
+							sg_post_key = db_prefix + "post:" + current_subgreenit(request->not_query) + ":" + r_num + safe_title_string(request->variables->title);
+						}while(db->exists(sg_post_key));
 						
 						db->lpush(posts_key, sg_post_key);
 						
 						//create the post key
-						db->hmset(sg_post_key, "creator", username_from_token(request->cookies->token), "body", request->variables->body, "post_date", Protocols.HTTP.Server.http_date(time()), "upvotes", "0", "downvotes", "0", "parent", current_subgreenit(request->not_query), "title", request->variables->title);
+						db->hmset(sg_post_key, "creator", username_from_token(request->cookies->token), "body", request->variables->body, "post_date", Protocols.HTTP.Server.http_date(time()), "upvotes", "0", "downvotes", "0", "parent", current_subgreenit(request->not_query), "title", request->variables->title, "deleted", "0");
 						//add this post to the users post counter
 						db->lpush(user_post_key, sg_post_key);
 						
