@@ -109,27 +109,60 @@
 		return temp * " ";
 	}
 	
-	string generate_nav(string uri)
+	string assemble_nav_controls(string prevpage_link, string nextpage_link, int current_page, int maxpages)
 	{
+		string nav = "";
+		
+		
+		if(!maxpages)
+			return "<br><center>only page</center><br>";
+		
+		nav += "<br><center>";
+		
+		if(current_page > 0)
+			nav += "<a href=\"" + prevpage_link + "\" >&ltprevious|</a>";
+		
+		nav +=  current_page + "/" + maxpages;
+		
+		if(current_page < maxpages)
+			nav +=  "<a href=\"" + nextpage_link + "\" >|next&gt</a>";
+		
+		nav += "</center><br>";
+		
+		return nav;
+	}
+	
+	string generate_nav(string pre_uri)
+	{
+		string uri;
+		
+		if(pre_uri == "/")
+			uri = "/g/" + db->get(db_prefix + "variable:setup") + "/";
+		else
+			uri = pre_uri;
+			
+		
+		//=========================
+		
 		array(string) sub_uri = trim_uri(uri) / "/";
-		int page = 0, other = 0, abort = 0;
+		int page = 0, other = 0, abort = 0, total, ppp, maxpages;
 		string sub_path = "";
 		
-		if(uri == "/")
-		{
-			string base = "/g/" + db->get(db_prefix + "variable:setup") + "/p";
-			
-			string prev = base + (page - 1) + "/";
-			string next = base + (page + 1) + "/";
-			
-			return "<br><center><a href=\"" + prev + "\" >&ltprevious|</a>" + page + "<a href=\"" + next + "\" >|next&gt</a></center><br>";
-		}
+		//=======================
 		
 		if(!subgreenit_exists(uri))
 		{
 			return "<br><center>no pages</center><br>";
 		}
 		
+		
+		total = db->llen(db_prefix + "variable:" +current_subgreenit(uri)  + ":posts");
+		ppp = (int)db->get(db_prefix + "variable:ppp");
+		
+		if(!total)
+			maxpages = 0;
+		else
+			maxpages = (total / ppp);
 		
 		
 		if(sizeof(sub_uri) > 2)
@@ -142,7 +175,7 @@
 				string temp = sub_path[1..];
 				page = (int)temp;
 			}
-			else if(sub_path == "comments")
+			else if(sub_path == "comments" || sub_path == "create")
 				abort = 1;
 			else //its any other
 			{
@@ -170,8 +203,7 @@
 		string next = base + (page + 1) + "/";
 		
 		
-		
-		return "<br><center><a href=\"" + prev + "\" >&ltprevious|</a>" + page + "<a href=\"" + next + "\" >|next&gt</a></center><br>";
+		return assemble_nav_controls(prev, next, page, maxpages);
 	}
 	
 	
