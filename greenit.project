@@ -109,10 +109,14 @@
           <File Name="src/html/action/downvote/index.psp"/>
         </VirtualDirectory>
       </VirtualDirectory>
+      <VirtualDirectory Name="update">
+        <File Name="src/html/update/index.psp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <File Name="src/greenit_scgi_params"/>
     <File Name="src/greenit.conf"/>
     <File Name="src/install.sh"/>
+    <File Name="src/greenit.pike"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
 </CodeLite_Project>

@@ -423,4 +423,20 @@
 		return final_str;
 	}
 	
+	int user_is_moderator(string cookie, string uri)
+	{
+		string key = db_prefix + "greenit:" + current_subgreenit(uri) + ":moderators";
+		
+		array(string) moderators = db->lrange(key, 0, -1);
+		
+		//foreach()
+		
+	}
+	
+	int user_is_mod_admin(string cookie, string uri)
+	{
+		
+		
+	}
+	
 %>
