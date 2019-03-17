@@ -1,0 +1,13 @@
+<%@ include file="/elements/header.psp" %>
+	<div class="feed">
+	
+		<h1>Manage site</h1>
+		
+		WIP
+		
+	</div>
+	
+	<%@ include file="/elements/controls.psp" %>
+	
+</div>
+<%@ include file="/elements/footer.psp" %>

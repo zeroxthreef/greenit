@@ -423,20 +423,35 @@
 		return final_str;
 	}
 	
-	int user_is_moderator(string cookie, string uri)
+	int user_is_moderator(string cookie_token, string uri)
 	{
-		string key = db_prefix + "greenit:" + current_subgreenit(uri) + ":moderators";
+		string key = db_prefix + "variable:" + current_subgreenit(uri) + ":moderators";
 		
 		array(string) moderators = db->lrange(key, 0, -1);
 		
-		//foreach()
+		foreach(moderators, string user)
+		{
+			array(string) key_data = replace(user, "\r", "") / ":";
+			
+			write("heeyyy |%s| |%s|\n", replace(key_data[2], "\r", ""), username_from_token(cookie_token));
+			
+			if(key_data[2] == username_from_token(cookie_token))
+				return 1;
+		}
 		
 	}
 	
-	int user_is_mod_admin(string cookie, string uri)
+	int user_is_admin(string cookie_token)//request->cookies->token
 	{
-		
-		
+		//check if the user is an admin
+		foreach(db->lrange(db_prefix + "variable:admins", 0, -1), string key)
+		{
+			array(string) key_data = replace(key, "\r", "") / ":";
+			
+			
+			if(key_data[2] == username_from_token(cookie_token))
+				return 1;
+		}
 	}
 	
 %>

@@ -112,6 +112,9 @@
       <VirtualDirectory Name="update">
         <File Name="src/html/update/index.psp"/>
       </VirtualDirectory>
+      <VirtualDirectory Name="manage">
+        <File Name="src/html/manage/index.psp"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <File Name="src/greenit_scgi_params"/>
     <File Name="src/greenit.conf"/>

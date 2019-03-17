@@ -4,6 +4,7 @@
 
 import redis_client;
 
+string db_prefix = "greenit:";
 int db_index = 2;
 string scriptrunner_location = "./ScriptRunner_SCGI.pike";
 Redis db;
@@ -24,7 +25,14 @@ int main(int argc, array(string) argv)
 	return 0;
 }
 
-void handle_events()
+string key_filter(string key)
+{
+	return replace(replace(key, "\r", ""), "\n", "");
+}
+
+//TODO make a sorting function
+
+void handle_events() //TODO also handle dangling connections to redis from 404 pages or other unimportant ones
 {
 	int connected = 0;
 	
@@ -49,11 +57,35 @@ void handle_events()
 	while(1) //will run forever so...
 	{
 		//handles ranking posts in the viewing menu types. Would make a lua script for this, but if the db gets large enough, that could be slow
+		array(string) subgreenits = db->lrange(db_prefix + "variable:subgreenits", 0, -1);
+		array(string) posts;
 		
 		
+		foreach(subgreenits, string sg_key)
+		{
+			//string popular_key = 
+			array(string) key_parts = key_filter(sg_key) / ":";
+			posts = db->lrange(db_prefix + "variable:" + key_parts[2] + ":posts", 0, -1);
+			
+			/*
+			foreach(posts, string post_key)
+			{
+				//sort each post in the popular/controversial lists
+				//write("heyyyy %s\n", key_filter(post_key));
+			}
+			*/
+			
+			//SORT HERE
+			
+			
+			
+			
+			
+			delay(1); //more delay so it doesnt get bogged down
+		}
 		
-		
-		delay(1);
+		//delay a little more
+		delay(10);
 	}
 	
 }

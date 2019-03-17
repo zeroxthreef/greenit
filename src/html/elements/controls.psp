@@ -62,22 +62,10 @@
 		<%
 			//display the text box
 			
-			bool user_is_admin = false;
 			string key = db_prefix + "subgreenit:" + current_subgreenit(request->not_query);
 			
-			//check if the user is an admin
-			foreach(db->lrange(db_prefix + "variable:admins", 0, -1), string key)
-			{
-				array(string) key_data = replace(key, "\r", "") / ":";
-				
-				//write("heeyyy |%s| |%s|\n", replace(key_data[2], "\r", ""), username_from_token(request->cookies->token));
-				
-				if(key_data[2] == username_from_token(request->cookies->token))
-					user_is_admin = true;
-			}
-			
 			if(subgreenit_exists(request->not_query))
-				if(username_from_token(request->cookies->token) == replace(db->hget(key, "creator"), "\r\n", "") || user_is_admin)
+				if(username_from_token(request->cookies->token) == replace(db->hget(key, "creator"), "\r\n", "") || user_is_moderator(request->cookies->token, request->not_query) || user_is_admin(request->cookies->token))
 				{
 					//TODO delete this once the css system works
 					
