@@ -12,7 +12,7 @@
 					{
 						if(!db->exists(db_prefix + "subgreenit:" + request->variables->name))
 						{
-							db->hmset(db_prefix + "subgreenit:" + request->variables->name, "name", request->variables->name, "creator", username_from_token(request->cookies->token), "about", "", "date_created", Protocols.HTTP.Server.http_date(time()));
+							db->hmset(db_prefix + "subgreenit:" + request->variables->name, "name", request->variables->name, "creator", username_from_token(request->cookies->token), "about", "", "date_created", time());
 							db->rpush(db_prefix + "variable:subgreenits",db_prefix + "subgreenit:" + request->variables->name);
 							db->lpush(db_prefix + "variable:" + request->variables->name + ":moderators", username_from_token(request->cookies->token));
 							out += "created subgreenit at <a href=\"/g/" + request->variables->name + "/\">/g/" + request->variables->name + "/</a>";

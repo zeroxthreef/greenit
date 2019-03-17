@@ -85,9 +85,9 @@
 								out += "<font color=\"red\">user is already a moderator</font>";
 							else
 							{
-								string user_key = db_prefix + "user:" + request->variables->modadd;
+								string user_key = db_prefix + "user:" +( (request->variables->modadd[0..0] == "!") ? request->variables->modadd[1..] : request->variables->modadd);
 								
-								if(!db->exists(user_key) && !db->exists(user_key[1..]))
+								if(!db->exists(user_key))
 									out += "<font color=\"red\">user does not exist</font>";
 								else
 								{
@@ -99,7 +99,7 @@
 									else
 									{
 										db->rpush(db_prefix + "variable:" + current_subgreenit(request->not_query) + ":moderators", request->variables->modadd);
-										out += "added user " +  request->variables->modadd + " to moderator list";
+										out += "added user " +  request->variables->modadd[1..] + " to moderator list";
 									}
 								}
 							}
@@ -135,7 +135,7 @@
 					//the add user to moderate button
 					
 					out += "<form action=\"/g/" + current_subgreenit(request->not_query) + "/\" method=\"post\">\n\
-						Add user to moderator list:<br>\n\
+						Add/remove user to moderator list (prepend '!' to beginning of username to remove):<br>\n\
 						<input type=\"text\" name=\"modadd\"><br>\n\
 						<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
 					</form><br>";

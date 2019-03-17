@@ -8,7 +8,7 @@
 		{
 			out += "<center><h1>"+ username + " </h1></center>";
 			
-			out += "<h2>Account creation date - " + db->hget(user_key, "date_created") +"</h2>";
+			out += "<h2>Account creation date - " + Protocols.HTTP.Server.http_date((int)db->hget(user_key, "date_created")) +"</h2>";
 		}
 		else
 			out += "<h1>No user - " + request->not_query[strlen("/account/")..] + "</h1>";

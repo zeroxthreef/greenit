@@ -48,7 +48,7 @@
 					
 					
 					//TODO remove token from users hash
-					response = db->hmset(user_key, "username", username, "password", hash_pw, "token", token, "date_created", Protocols.HTTP.Server.http_date(time()));
+					response = db->hmset(user_key, "username", username, "password", hash_pw, "token", token, "date_created", time());
 					
 					db->set("greenit:token:" + token, user_key);
 					
