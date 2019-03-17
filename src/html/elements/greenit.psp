@@ -175,7 +175,7 @@
 				string temp = sub_path[1..];
 				page = (int)temp;
 			}
-			else if(sub_path == "comments" || sub_path == "create")
+			else if(sub_path == "comments" || sub_path == "create" || sub_path == "css")
 				abort = 1;
 			else //its any other
 			{

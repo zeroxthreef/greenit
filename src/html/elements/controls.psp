@@ -135,10 +135,13 @@
 					//the add user to moderate button
 					
 					out += "<form action=\"/g/" + current_subgreenit(request->not_query) + "/\" method=\"post\">\n\
-						Add/remove user to moderator list (prepend '!' to beginning of username to remove):<br>\n\
+						Add/remove user to moderator list<br>(prepend '!' to beginning of username to remove):<br>\n\
 						<input type=\"text\" name=\"modadd\"><br>\n\
-						<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
-					</form><br>";
+						<input type=\"submit\" value=\"submit\" id=\"submit\"><br>\n\
+					</form><br><br>";
+					
+					//the css setting button
+					out += "<input type=\"button\" onclick=\"location.href=\'/g/" + current_subgreenit(request->not_query) + "/css/\'\" value=\"Modify CSS\" /><br><br>";
 				}
 			
 		%>
