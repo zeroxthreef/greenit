@@ -101,6 +101,23 @@
 				out += "<hr></hr>";
 				out += "comments go here";
 			}
+			else if(sub_path == "css")
+			{
+				out += "<h1>Edit " + banner_current_subgreenit(request->not_query) + " CSS</h1>";
+				
+				//feedback goes here
+				
+				string key = db_prefix + "subgreenit:" + current_subgreenit(request->not_query);
+				
+				if(subgreenit_exists(request->not_query))
+					if(username_from_token(request->cookies->token) == replace(db->hget(key, "creator"), "\r\n", "") || user_is_moderator(request->cookies->token, request->not_query) || user_is_admin(request->cookies->token))
+					{
+						out += "yeah";
+					}
+					else
+						out += "Insufficient permissions";
+				
+			}
 			else
 				out += "youre in a place";
 		%>

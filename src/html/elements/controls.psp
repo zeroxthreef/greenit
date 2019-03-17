@@ -122,10 +122,6 @@
 				{
 					out += "<hr></hr><h3>subgreenit settings -</h3><br>";
 					
-					//TODO delete this once the css system works
-					
-					out += "Custom CSS coming soon<br><br>";
-					
 					out += "<form action=\"/g/" + current_subgreenit(request->not_query) + "/\" method=\"post\">\n\
 						Subgreenit about text:<br>\n\
 						<textarea name=\"about\" cols=\"30\" rows=\"10\">" + db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about") + "</textarea><br>\n\
