@@ -31,6 +31,7 @@ string key_filter(string key)
 }
 
 //TODO make a sorting function
+//TODO BE SURE TO MAKE CLOBAL POPULAR AND CONTROVERSIAL SORTERS ASWELL AS DAILY SORTERS
 
 void handle_events() //TODO also handle dangling connections to redis from 404 pages or other unimportant ones
 {

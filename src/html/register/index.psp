@@ -11,9 +11,9 @@
 				//register the account and give feedback
 				string username = format_username(request->variables->username);
 				
-				if(strlen(username) > 50 || strlen(username) <= 2)
+				if(strlen(username) > 50 || strlen(username) <= 2 || !is_clean_username_string(username))
 				{
-					out += "username not usable. Please keep it under 50 characters and above 2 characters";
+					out += "username not usable. Please keep it under 50 characters and above 2 characters. Also, only alphanumeric characters allowed";
 					can_continue--;
 				}
 				

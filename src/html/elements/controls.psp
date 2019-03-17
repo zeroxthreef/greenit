@@ -19,8 +19,30 @@
 				if(user_logged_in(request->cookies->token))
 					out += "<input type=\"button\" onclick=\"location.href=\'/g/" + current_subgreenit(request->not_query) + "/create/\'\" value=\"Create Post\" /><br><br>";
 				
-				out += format_parse(db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about")) + "<br><br>";
+				out += format_parse(db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about")) + "<hr></hr>";
 				
+				//list the moderators
+				out += "<center>subgreenit moderator(s) -</center><br>";
+				
+				
+				string mod_key = db_prefix + "variable:" + current_subgreenit(request->not_query) + ":moderators";
+				
+				array(string) moderators = db->lrange(mod_key, 0, -1);
+				
+				foreach(moderators, string user)
+				{
+					out += user + "<br>";
+				}
+				
+				out += "<br><br>";
+				
+				/*
+				string key_sg = db_prefix + "subgreenit:" + current_subgreenit(request->not_query);
+				
+				if(subgreenit_exists(request->not_query))
+					if(username_from_token(request->cookies->token) == replace(db->hget(key_sg, "creator"), "\r\n", "") || user_is_moderator(request->cookies->token, request->not_query) || user_is_admin(request->cookies->token))
+						out += "<hr></hr><h4>control feedback</h4>";
+				*/
 				
 				//handle the css uploading and about test
 				array(string) temp = request->not_query / "/";
@@ -44,14 +66,45 @@
 					
 					if(username_from_token(request->cookies->token) == replace(db->hget(key, "creator"), "\r\n", "") || user_is_admin)
 					{
-						if(strlen(request->variables->about) > 2000)
-							out += "about string too long. Keep it under 2000 characters";
-						else
+						if(request->variables->about && !request->variables->modadd)
 						{
-							//db->hset(key, "about", safe_about_string(request->variables->about));
-							db->hset(key, "about", request->variables->about);
-							out += "updated about text. go to subgreenit home to see changes";
+							if(strlen(request->variables->about) > 2000)
+								out += "<font color=\"red\">about string too long. Keep it under 2000 characters</font>";
+							else if(!request->variables->modadd)
+							{
+								//db->hset(key, "about", safe_about_string(request->variables->about));
+								db->hset(key, "about", request->variables->about);
+								out += "updated about text. go to subgreenit home to see changes";
+							}
 						}
+						
+						
+						if(request->variables->modadd && !request->variables->about)
+						{
+							if(user_name_is_moderator(request->variables->modadd, request->not_query))
+								out += "<font color=\"red\">user is already a moderator</font>";
+							else
+							{
+								string user_key = db_prefix + "user:" + request->variables->modadd;
+								
+								if(!db->exists(user_key) && !db->exists(user_key[1..]))
+									out += "<font color=\"red\">user does not exist</font>";
+								else
+								{
+									if(request->variables->modadd[0..0] == "!") //removing the user
+									{
+										db->lrem(db_prefix + "variable:" + current_subgreenit(request->not_query) + ":moderators", 0, request->variables->modadd[1..]);
+										out += "removing user " +  request->variables->modadd + " from moderator list";
+									}
+									else
+									{
+										db->rpush(db_prefix + "variable:" + current_subgreenit(request->not_query) + ":moderators", request->variables->modadd);
+										out += "added user " +  request->variables->modadd + " to moderator list";
+									}
+								}
+							}
+						}
+						
 					}
 					else
 						out += "invalid permission";
@@ -67,6 +120,8 @@
 			if(subgreenit_exists(request->not_query))
 				if(username_from_token(request->cookies->token) == replace(db->hget(key, "creator"), "\r\n", "") || user_is_moderator(request->cookies->token, request->not_query) || user_is_admin(request->cookies->token))
 				{
+					out += "<hr></hr><h3>subgreenit settings -</h3><br>";
+					
 					//TODO delete this once the css system works
 					
 					out += "Custom CSS coming soon<br><br>";
@@ -74,6 +129,14 @@
 					out += "<form action=\"/g/" + current_subgreenit(request->not_query) + "/\" method=\"post\">\n\
 						Subgreenit about text:<br>\n\
 						<textarea name=\"about\" cols=\"30\" rows=\"10\">" + db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about") + "</textarea><br>\n\
+						<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
+					</form><br>";
+					
+					//the add user to moderate button
+					
+					out += "<form action=\"/g/" + current_subgreenit(request->not_query) + "/\" method=\"post\">\n\
+						Add user to moderator list:<br>\n\
+						<input type=\"text\" name=\"modadd\"><br>\n\
 						<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
 					</form><br>";
 				}

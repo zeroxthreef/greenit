@@ -269,6 +269,18 @@
 		return 1;
 	}
 	
+	int is_clean_username_string(string title)
+	{
+		
+		for(int i = 0; i < strlen(title); i++)//make sure only alphanumeric
+		{
+			if((title[i] < 48 || title[i] > 57) && (title[i] < 65 || title[i] > 90) && (title[i] < 97 || title[i] > 122))
+				return 0;
+		}
+		
+		return 1;
+	}
+	
 	int subgreenit_exists(string uri)
 	{
 		string key = db_prefix + "subgreenit:" + current_subgreenit(uri);
@@ -431,14 +443,12 @@
 		
 		foreach(moderators, string user)
 		{
-			array(string) key_data = replace(user, "\r", "") / ":";
+			string data = decorrupt(user);
 			
-			write("heeyyy |%s| |%s|\n", replace(key_data[2], "\r", ""), username_from_token(cookie_token));
-			
-			if(key_data[2] == username_from_token(cookie_token))
+			if(data == username_from_token(cookie_token))
 				return 1;
 		}
-		
+		return 0;
 	}
 	
 	int user_is_admin(string cookie_token)//request->cookies->token
@@ -452,6 +462,37 @@
 			if(key_data[2] == username_from_token(cookie_token))
 				return 1;
 		}
+		return 0;
+	}
+	
+	int user_name_is_moderator(string username, string uri)
+	{
+		string key = db_prefix + "variable:" + current_subgreenit(uri) + ":moderators";
+		
+		array(string) moderators = db->lrange(key, 0, -1);
+		
+		foreach(moderators, string user)
+		{
+			string data = decorrupt(user);
+			
+			if(data == username)
+				return 1;
+		}
+		return 0;
+	}
+	
+	int user_name_is_admin(string username)
+	{
+		//check if the user is an admin
+		foreach(db->lrange(db_prefix + "variable:admins", 0, -1), string key)
+		{
+			array(string) key_data = replace(key, "\r", "") / ":";
+			
+			
+			if(key_data[2] == username)
+				return 1;
+		}
+		return 0;
 	}
 	
 %>
