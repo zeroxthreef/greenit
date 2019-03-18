@@ -76,7 +76,13 @@
 	
 	string get_comments(string uri)
 	{
+		string final_str = "";
 		
+		
+		final_str += "<div class = \"comment\">hey, whats up?<br><div class = \"comment\">not much</div></div>";
+		
+		
+		return final_str;
 	}
 	
 	string create_post_element(string key)

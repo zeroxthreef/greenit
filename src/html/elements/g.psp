@@ -99,7 +99,7 @@
 				//draw the post and comments
 				out += get_comments_post(request->not_query);
 				out += "<hr></hr>";
-				out += "comments go here";
+				out += get_comments(request->not_query);
 			}
 			else if(sub_path == "css")
 			{
