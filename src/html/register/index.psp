@@ -44,7 +44,7 @@
 				if(can_continue)
 				{
 					string response, token = MIME.encode(Crypto.Random.random_string(20), "base64");
-					string hash_pw = Crypto.Password.hash(request->variables->password, "ssha"); //yes this is bad, but I couldnt figure out the one without salt appended
+					string hash_pw = Crypto.Password.hash(request->variables->password);
 					
 					
 					//TODO remove token from users hash

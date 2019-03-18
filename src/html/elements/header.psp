@@ -9,6 +9,17 @@
 		<meta charset="UTF-8" />
 		<link rel="icon" type="img/ico" href="/img_res/favicon.ico">
 		<link href="/style.css" rel="stylesheet" type="text/css">
+		<%
+			string css_data = db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "css");
+			if(css_data)
+			{
+				css_data = remove_crlf(css_data);
+				
+				if(strlen(css_data))
+					out += "<style>" + safe_css_string(css_data) + "</style>";
+			}
+			
+		%>
 	</head>
 	<body>
 	<div class="user_subs">

@@ -332,6 +332,50 @@
 		return final_str;
 	}
 	
+	string safe_css_string(string input) //this is not bulletproof and I know it isnt
+	{
+		string final_str;
+		array(string) temp;
+		
+		temp = input / "<";
+		
+		final_str = temp * "&lt";
+		
+		temp = final_str / ">";
+		
+		final_str = temp * "&gt";
+		
+		//search for url() places and only allow it to be used if the link is imgur. Change resource to /img_res/invalid.png if not
+		
+		for(int i = 0; i < strlen(final_str); i++)
+		{
+			if(final_str[i..i + strlen("url(") - 1] == "url(")
+			{
+				
+				if(search(final_str[i + strlen("url(")..], ")") < 2) //make sure it finds the closing parenthesees
+					return "error";
+				
+				string url = final_str[i + strlen("url(")..i + strlen("url(") + search(final_str[i + strlen("url(")..], ")") - 1];
+				string url_full = final_str[i..i + strlen("url(") + search(final_str[i + strlen("url(")..], ")")];
+				
+				//write("url |%s|, |%s|\n", url, url[0..strlen("https://i.imgur.com/")]);
+				
+				//test and make sure it's imgur only
+				
+				if(url[0..strlen("https://i.imgur.com/") - 1] != "https://i.imgur.com/" && url[0..strlen("http://i.imgur.com/") - 1] != "http://i.imgur.com/")
+				{
+					array(string) temp_data = final_str / url;
+					//write("not good %s\n", url_full);
+					final_str = temp_data * "/img_res/invalid.png";
+				}
+			}
+		}
+		
+		
+		
+		return final_str;
+	}
+	
 	string format_parse(string input)
 	{
 		string final_str = input;

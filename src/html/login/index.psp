@@ -14,7 +14,7 @@
 				
 				if(db->exists(user_key))
 				{
-					if(Crypto.Password.verify(request->variables->password, db->hget(user_key, "password")))
+					if(Crypto.Password.verify(request->variables->password, decorrupt(db->hget(user_key, "password"))))
 					{
 						string temp_place = replace(replace(replace(MIME.encode(Crypto.Random.random_string(30), "base64"), "=", ""), "+", ""), "/", "");
 						string cook_key = db_prefix + "variable:login:" + temp_place; //haha cook key

@@ -100,6 +100,11 @@
 		return replace(replace(input, "\r", ""), "\n", "");
 	}
 	
+	string remove_crlf(string input)
+	{
+		return replace(input, "\r\n", "");
+	}
+	
 %>
 
 <%

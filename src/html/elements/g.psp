@@ -105,14 +105,40 @@
 			{
 				out += "<h1>Edit " + banner_current_subgreenit(request->not_query) + " CSS</h1>";
 				
-				//feedback goes here
 				
 				string key = db_prefix + "subgreenit:" + current_subgreenit(request->not_query);
 				
 				if(subgreenit_exists(request->not_query))
 					if(username_from_token(request->cookies->token) == replace(db->hget(key, "creator"), "\r\n", "") || user_is_moderator(request->cookies->token, request->not_query) || user_is_admin(request->cookies->token))
 					{
-						out += "yeah";
+						string css_data = db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "css");
+						
+						out += "Some tips- Download this site's stylesheet or view it in inspect element to see what classes are used. Images are only allowed from imgur, so if you use url(http://place.com/image.png) to load an image (or url in general because I dont really have an incentive to do more filtering), you need to copy the i.imgur permanent link by right clicking on an image in imgur and copying address.<br><br>The input here can only be at max 8000 characters<br><br>";
+						
+						//test if POSTing and respond
+						if(request->method == "POST")
+						{
+							if(request->variables->css)
+							{
+								if(strlen(request->variables->css) <= 8000)
+								{
+									out += "Updating CSS. Return to subgreenit home to see changes<br><br>";
+									//TODO check and filter css, wait no. Do that in the outputter
+									db->hset(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "css", request->variables->css);
+								}
+								else
+									out += "Too much data. If you really cant make it any smaller, remove newlines or feed it into a CSS compactor<br><br>";
+							}
+						}
+						
+						
+						//respond with the form and text box that contains the css and stuff
+						out += "\n\
+						<form action=\"/g/" + current_subgreenit(request->not_query) + "/css/\" method=\"post\">\n\
+						CSS data:<br>\n\
+						<textarea name=\"css\" cols=\"80\" rows=\"20\">" + css_data + "</textarea><br><br>\n\
+						<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
+						</form>";
 					}
 					else
 						out += "Insufficient permissions";
