@@ -86,7 +86,7 @@
 		
 		//TODO work with reply stuff. Need to parse out the reply path with ids
 		
-		if(path_parts[5])
+		if(sizeof(path_parts) >= 4)
 			comm_str = create_comments(post_key, 0, "", path_parts[5]);
 		else
 			comm_str = create_comments(post_key, 0, "", "");
@@ -110,6 +110,9 @@
 		array(string) key_parts = comm_list_key_root / ":";
 		
 		
+		
+		
+		
 		array(string) comments;
 		int replies;
 		
@@ -121,6 +124,8 @@
 			//append the id to the end whenever applicable so its in the non root mode
 			comm_list_key_root += ":" + parent_id;
 		}
+		
+		write("yeah %s %s --------------- |%s| |%s|\n", post_key, (string)parent_id, path, (string)reply_path);
 		
 		//determine if comment has replies, and if not, add the /div to make a list instead
 		
@@ -135,10 +140,10 @@
 		foreach(comments, string comment)
 		{
 			comment = decorrupt(comment);
-			string author = db->hget(comment, "author");
-			string body = db->hget(comment, "comment");
-			string id = db->hget(comment, "id");
-			string replies = create_comments(post_key, id, path + id, reply_path);
+			string author = remove_crlf(db->hget(comment, "author"));
+			string body = remove_crlf(db->hget(comment, "comment"));
+			string id = remove_crlf(db->hget(comment, "id"));
+			string replies = create_comments(post_key, id, path + id + (strlen(path) ? "|" : ""), reply_path);
 			
 			array(string) level = path / "|";
 			
@@ -146,7 +151,7 @@
 			{
 				final_str += comment_part_0 + (sizeof(level) % 2);
 				final_str += comment_part_1 + "<b>" + author + "</b><br><br>" + body + comment_part_2;
-				final_str += path + id + comment_part_3;
+				final_str += decorrupt(path) + id + comment_part_3;
 				
 				if(replies)
 					final_str += replies;
@@ -154,8 +159,11 @@
 				final_str += comment_part_4;
 				
 				//if replying to this comment, draw the reply box
-				if(path == reply_path)
+				if(path == reply_path && strlen(reply_path))
+				{
+					write("yep\n");
 					final_str += get_create_reply_form(key_parts[2], key_parts[3], reply_path);
+				}
 			}
 			
 			
@@ -195,7 +203,7 @@
 		*/
 		return "\n\
 		<div class=\"feed_object\">\n\
-			<div class=\"feed_object_updn_container\">(" + ((int)db->hget(fixed_key, "upvotes") - (int)db->hget(fixed_key, "downvotes")) + ")<hr></hr><iframe class=\"uv_dv\" src=\"/action/upvote?c=" + replace(temp[3], "\r", "") +"&g=" + temp[2] + "\"></iframe><br><iframe class=\"uv_dv\" src=\"/action/downvote?c=" + replace(temp[3], "\r", "") +"&g=" + temp[2] + "\"></iframe><br></div><div class=\"feed_object_title_container\"><a href=\"" + "/g/" + db->hget(fixed_key, "parent") + "/comments/" + temp[3] + "\"><h2>" + db->hget(fixed_key, "title") + "</h2></a></div>\n\
+			<div class=\"feed_object_updn_container\">(" + ((int)db->hget(fixed_key, "upvotes") - (int)db->hget(fixed_key, "downvotes")) + ")<hr></hr><iframe class=\"uv_dv\" src=\"/action/upvote?c=" + replace(temp[3], "\r", "") +"&g=" + temp[2] + "\"></iframe><br><iframe class=\"uv_dv\" src=\"/action/downvote?c=" + replace(temp[3], "\r", "") +"&g=" + temp[2] + "\"></iframe><br></div><div class=\"feed_object_title_container\"><a href=\"" + "/g/" + db->hget(fixed_key, "parent") + "/comments/" + temp[3] + "/\"><h2>" + db->hget(fixed_key, "title") + "</h2></a></div>\n\
 			" + (strlen(body) ? "" : "<br><div class=\"flair\">" + "Title only" + "</div>") + "\n\
 		</div>";
 	}
