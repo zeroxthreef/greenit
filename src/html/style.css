@@ -124,12 +124,22 @@ textarea
 	margin-left: 0.8%;
 }
 
-.comment
+.comment_0
 {
 	margin: 0.8%;
 	padding: 0.5%;
 	display: inline-block;
-	border-width: 1px solid black;
+	background-color: #f2f2f2;
 	border-left: 2px solid #91A582;
-	width: 100%;
+	width: 97%;
+}
+
+.comment_1
+{
+	margin: 0.8%;
+	padding: 0.5%;
+	display: inline-block;
+	background-color: #e6e6e6;
+	border-left: 2px solid #91A582;
+	width: 97%;
 }

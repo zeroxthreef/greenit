@@ -74,15 +74,57 @@
 		return response;
 	}
 	
-	string get_comments(string uri)
+	string get_comments(string uri, string post)
 	{
-		string final_str = "";
+		string post_key = db_prefix + "post:" + current_subgreenit(uri) + ":" + post;
+		string final_str = "", comm_str;
 		
 		
-		final_str += "<div class = \"comment\">hey, whats up?<br><div class = \"comment\">not much</div></div>";
+		//respond to POSTs
+		
+		//create_id("gnit")
+		
+		comm_str = create_comments(post_key, 0, 0);
+		
+		if(comm_str)
+			final_str += comm_str;
+		else
+			final_str += "no comments";
 		
 		
 		return final_str;
+	}
+	
+	string create_comments(string post_key, string parent_id, int comment_index)
+	{
+		string comm_key_root = post_key + ":comment:"; //takes the id. Wont ever be recursively named
+		string comm_list_key_root = post_key + ":replies"; //needs the id of the comment to get its replies. This is a list. NOTE WILL BE THE ROOT POST IF NO :id
+		string comment_part_0 = "<div class = \"comment_", comment_part_1 = "\">", comment_part_2 = "<br><a href=\"", comment_part_3 = "\">reply</a></div>";
+		
+		string comments;
+		int replies;
+		
+		//recursively create comments
+		
+		//detect if this isnt the root level. Will need to add onto the key if so
+		if(parent_id)
+		{
+			//append the id to the end whenever applicable so its in the non root mode
+		}
+		
+		//determine if comment has replies, and if not, add the /div to make a list instead
+		
+		replies = db->llen(comm_list_key_root);
+		
+		
+		if(comment_index > replies)
+			return 0;
+		
+		
+		comments = db->lrange(comm_list_key_root, comment_index, -1);
+		
+		
+		
 	}
 	
 	string create_post_element(string key)

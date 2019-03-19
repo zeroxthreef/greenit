@@ -105,6 +105,11 @@
 		return replace(input, "\r\n", "");
 	}
 	
+	string create_id(string identifier)
+	{
+		return (string)gethrtime() + identifier + (string)random(100000);
+	}
+	
 %>
 
 <%
