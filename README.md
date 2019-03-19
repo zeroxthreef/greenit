@@ -1,5 +1,7 @@
 # greenit
 
+![greenit logo](https://raw.githubusercontent.com/zeroxthreef/greenit/master/src/html/img_res/greenit.png)
+
 Bad reddit clone experiment. Only reason it exists is to learn Pike & Pike ScriptRunner.
 
 ## Installation
