@@ -6,7 +6,7 @@ import redis_client;
 
 string db_prefix = "greenit:";
 int db_index = 2;
-string scriptrunner_location = "./ScriptRunner_SCGI.pike";
+string scriptrunner_location = "/usr/local/bin/ScriptRunner_SCGI.pike";
 Redis db;
 
 int main(int argc, array(string) argv)
