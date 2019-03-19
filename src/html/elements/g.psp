@@ -85,7 +85,7 @@
 						//add this post to the users post counter
 						db->lpush(user_post_key, sg_post_key);
 						
-						response += "Created post at <a href=\"/" + banner_current_subgreenit(request->not_query) + "/comments/" + r_num + safe_title_string(request->variables->title) + "\">" + banner_current_subgreenit(request->not_query) + "/comments/" + r_num + safe_title_string(request->variables->title) + "</a>";
+						response += "Created post at <a href=\"/" + banner_current_subgreenit(request->not_query) + "/comments/" + r_num + safe_title_string(request->variables->title) + "/\">" + banner_current_subgreenit(request->not_query) + "/comments/" + r_num + safe_title_string(request->variables->title) + "</a>";
 					}
 					else
 						response += "Please keep the post title under 50 characters and over 3 characters long. Also must only contain printable characters and no underscores";
@@ -132,7 +132,24 @@
 						}
 						else //its a reply somewhere else
 						{
-							
+							if(strlen(request->variables->body) < 1 || strlen(request->variables->body) > 2000)
+							{
+								out += "keep comments down to 200 characters and make sure they contain a single character at least";
+							}
+							else
+							{
+								//add it to the db
+								string id = create_id("gnit");
+								comm_key_root += id;
+								comm_list_key_root += ":" + request->variables->id_path;
+								
+								
+								db->hmset(comm_key_root, "author", decorrupt(username_from_token(request->cookies->token)), "comment", safe_about_string(request->variables->body), "time", time(), "upvotes", 0, "downvotes", 0, "id", id);
+								//add to list
+								db->lpush(comm_list_key_root, comm_key_root);
+								
+								out += "added comment";
+							}
 						}
 					}
 					else

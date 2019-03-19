@@ -105,7 +105,7 @@
 	{
 		//string comm_key_root = post_key + ":comment:"; //takes the id. Wont ever be recursively named
 		string comm_list_key_root = post_key + ":replies"; //needs the id of the comment to get its replies. This is a list. NOTE WILL BE THE ROOT POST IF NO :id
-		string comment_part_0 = "<div class = \"comment_", comment_part_1 = "\">", comment_part_2 = "<br><a href=\"", comment_part_3 = "\">reply</a>", comment_part_4 = "</div>";
+		string comment_part_0 = "<div class = \"comment_", comment_part_1 = "\">", comment_part_2 = "<br><a href=\"", comment_part_3 = "/\">reply</a>", comment_part_4 = "</div>";
 		string final_str = "";
 		array(string) key_parts = comm_list_key_root / ":";
 		
@@ -125,7 +125,7 @@
 			comm_list_key_root += ":" + parent_id;
 		}
 		
-		write("yeah %s %s --------------- |%s| |%s|\n", post_key, (string)parent_id, path, (string)reply_path);
+		
 		
 		//determine if comment has replies, and if not, add the /div to make a list instead
 		
@@ -143,27 +143,33 @@
 			string author = remove_crlf(db->hget(comment, "author"));
 			string body = remove_crlf(db->hget(comment, "comment"));
 			string id = remove_crlf(db->hget(comment, "id"));
-			string replies = create_comments(post_key, id, path + id + (strlen(path) ? "|" : ""), reply_path);
+			string replies = create_comments(post_key, id, path + id + (strlen(path) ? "c" : ""), reply_path);
 			
-			array(string) level = path / "|";
+			array(string) level = path / "c";
 			
 			if(!db->hget(comment, "deleted"))
 			{
 				final_str += comment_part_0 + (sizeof(level) % 2);
 				final_str += comment_part_1 + "<b>" + author + "</b><br><br>" + body + comment_part_2;
-				final_str += decorrupt(path) + id + comment_part_3;
+				final_str += path + id + comment_part_3;
+				
+				write("yeah %s %s --------------- |%s| |%s| %d %d\n", post_key, (string)parent_id, path, reply_path, strlen(path), strlen(reply_path));
+				//if replying to this comment, draw the reply box
+				
+				if(!parent_id && reply_path == id) //if this is the level after the root level
+				{
+					final_str += get_create_reply_form(key_parts[2], key_parts[3], reply_path);
+				}
+				else if(path == reply_path && strlen(reply_path)) //any level after the levelk after root
+				{
+					final_str += get_create_reply_form(key_parts[2], key_parts[3], reply_path);
+				}
 				
 				if(replies)
 					final_str += replies;
 				
 				final_str += comment_part_4;
 				
-				//if replying to this comment, draw the reply box
-				if(path == reply_path && strlen(reply_path))
-				{
-					write("yep\n");
-					final_str += get_create_reply_form(key_parts[2], key_parts[3], reply_path);
-				}
 			}
 			
 			
