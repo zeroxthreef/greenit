@@ -78,7 +78,7 @@
 	{
 		string post_key = db_prefix + "post:" + current_subgreenit(uri) + ":" + post;
 		string final_str = "", comm_str;
-		
+		array(string) path_parts = uri / "/";
 		
 		if(user_logged_in(token))
 			final_str += "<h2>reply</h2>" + get_create_reply_form(current_subgreenit(uri), post, "") + "<br><br>";
@@ -86,7 +86,11 @@
 		
 		//TODO work with reply stuff. Need to parse out the reply path with ids
 		
-		comm_str = create_comments(post_key, 0, "", 0);
+		if(path_parts[5])
+			comm_str = create_comments(post_key, 0, "", path_parts[5]);
+		else
+			comm_str = create_comments(post_key, 0, "", "");
+		
 		
 		if(comm_str)
 			final_str += comm_str;
@@ -103,6 +107,7 @@
 		string comm_list_key_root = post_key + ":replies"; //needs the id of the comment to get its replies. This is a list. NOTE WILL BE THE ROOT POST IF NO :id
 		string comment_part_0 = "<div class = \"comment_", comment_part_1 = "\">", comment_part_2 = "<br><a href=\"", comment_part_3 = "\">reply</a>", comment_part_4 = "</div>";
 		string final_str = "";
+		array(string) key_parts = comm_list_key_root / ":";
 		
 		
 		array(string) comments;
@@ -129,6 +134,7 @@
 		
 		foreach(comments, string comment)
 		{
+			comment = decorrupt(comment);
 			string author = db->hget(comment, "author");
 			string body = db->hget(comment, "comment");
 			string id = db->hget(comment, "id");
@@ -148,13 +154,15 @@
 				final_str += comment_part_4;
 				
 				//if replying to this comment, draw the reply box
+				if(path == reply_path)
+					final_str += get_create_reply_form(key_parts[2], key_parts[3], reply_path);
 			}
 			
 			
 		}
 		
 		
-		
+		return final_str;
 	}
 	
 	string get_create_reply_form(string subgreenit, string post, string id_path)
