@@ -65,7 +65,6 @@
     </Configuration>
   </Settings>
   <VirtualDirectory Name="src">
-    <File Name="src/ScriptRunner_SCGI.pike"/>
     <VirtualDirectory Name="html">
       <File Name="src/html/index.psp"/>
       <VirtualDirectory Name="elements">
@@ -120,6 +119,7 @@
     <File Name="src/greenit.conf"/>
     <File Name="src/install.sh"/>
     <File Name="src/greenit.pike"/>
+    <File Name="src/greenit.service"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
 </CodeLite_Project>

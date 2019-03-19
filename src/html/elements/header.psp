@@ -41,9 +41,7 @@
 	</div>
 	<div class="banner">
 		<div class="banner_options">
-			<img src="/img_res/greenit.png" style="height: 70px;" align = "left" /><font size = "6"><%= banner_current_subgreenit(request->not_query) %></font>
-		</div>
-		<div class="banner_options">
+		<img src="/img_res/greenit.png" style="height: 70px;" align = "left" /><font size = "6"><%= banner_current_subgreenit(request->not_query) %></font>
 			<a href="/"><b>greenit home page</b></a><b> | subgreenit controls:</b> <a href="/<%= (in_subgreenit(request->not_query)) ? banner_current_subgreenit(request->not_query) : "g/all" %>/">home</a> | <a href="/<%= (in_subgreenit(request->not_query)) ? banner_current_subgreenit(request->not_query) : "g/all" %>/new/">new</a> | <a href="/<%= (in_subgreenit(request->not_query)) ? banner_current_subgreenit(request->not_query) : "g/all" %>/popular/">popular</a> | <a href="/<%= (in_subgreenit(request->not_query)) ? banner_current_subgreenit(request->not_query) : "g/all" %>/controversial/">controversial</a>
 		</div>
 	</div>

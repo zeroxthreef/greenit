@@ -1,0 +1,14 @@
+[Unit]
+Description=Greenit daemon
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=www-data
+ExecStart=/usr/local/bin/ScriptRunner_SCGI.pike
+
+[Install]
+WantedBy=multi-user.target

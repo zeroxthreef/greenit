@@ -8,9 +8,13 @@ You need to have installed ![pike_redis_client](https://github.com/dressupgeekou
 
 Put those both in your ``/usr/local/lib/pike8.0/modules`` folder.
 
-Once you've taken care of that, run the ``src/install.sh`` script and restart nginx.
+VERY IMPORTANT: you will need to add the standard letsencrypt stuff to the nginx .conf file if you wanna listen to any other port than 8000 and also ssl.
+
+Once you've taken care of that, run the ``src/install.sh`` script (as root) and restart nginx.
+
+You will also need to modify the Pike ScriptRunner SCGI script and remove the first line, then replace it with ``#!/usr/bin/pike``. Rename that pike script file to ``ScriptRunner_SCGI.pike``, and move it to ``/usr/local/bin``.
 
 One thing to note about configuration: SELECT 2 is hardcoded into 3 files. Globally (for psp files) the util.psp file contains a constant for this and the login.pike and logout.pike files also contain this constant. There would only be one file for this, but scriptrunner has some limitations that required this solution.
 
 ## License
-MIT (though this may not be correct because of my usage of the scriptrunner SCGI file which is GPL/LGPL that I modified with a different shebang and log location)
+MIT
