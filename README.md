@@ -6,6 +6,8 @@ Bad reddit clone experiment. Only reason it exists is to learn Pike & Pike Scrip
 
 You need to have installed ![pike_redis_client](https://github.com/dressupgeekout/pike_redis_client) and ![pike scriptrunner](https://github.com/hww3/scriptrunner).
 
+(you might need to use my fork of pike redis client that uses unix domain sockets)
+
 Put those both in your ``/usr/local/lib/pike8.0/modules`` folder.
 
 VERY IMPORTANT: you will need to add the standard letsencrypt stuff to the nginx .conf file if you wanna listen to any other port than 8000 and also ssl.
