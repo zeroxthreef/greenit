@@ -9,7 +9,7 @@
 	//IMPORTANT. I dev on the same redis db for all of my projects so I have to set it to another index
 	int db_index = 2;
 	
-	string config_location = "html/elements/defaults.conf";
+	string config_location = "/var/www/greenit/html/elements/defaults.conf";
 	string db_prefix = "greenit:";
 	string format_notes = "Notes on formatting:<br><br>for videos, take the youtube video id (no ?=) place it between a [video]id_here[/video] tag.<br><br>for images, only imgur works. Copy an imgur image location and place everything after the imgur domain name between [img]image.png[/img]<br><br>For bold, underline, and italics, follow the same ide of opening and closing tags, but with [b][/b], [i],[/i], and [u],[/u]<br><br>";
 	
