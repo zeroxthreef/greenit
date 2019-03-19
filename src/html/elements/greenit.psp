@@ -80,7 +80,7 @@
 		string final_str = "", comm_str;
 		array(string) path_parts = uri / "/";
 		
-		if(user_logged_in(token))
+		if(user_logged_in(token) && sizeof(path_parts) < 7)
 			final_str += "<h2>reply</h2>" + get_create_reply_form(current_subgreenit(uri), post, "") + "<br><br>";
 		
 		
@@ -105,9 +105,9 @@
 	{
 		//string comm_key_root = post_key + ":comment:"; //takes the id. Wont ever be recursively named
 		string comm_list_key_root = post_key + ":replies"; //needs the id of the comment to get its replies. This is a list. NOTE WILL BE THE ROOT POST IF NO :id
-		string comment_part_0 = "<div class = \"comment_", comment_part_1 = "\">", comment_part_2 = "<br><a href=\"", comment_part_3 = "/\">reply</a>", comment_part_4 = "</div>";
 		string final_str = "";
 		array(string) key_parts = comm_list_key_root / ":";
+		string comment_part_0 = "<div class = \"comment_", comment_part_1 = "\">", comment_part_2 = "<br><a href=\"/g/" + key_parts[2] + "/comments/" + key_parts[3] + "/", comment_part_3 = "/\">reply</a>", comment_part_4 = "</div>";
 		
 		
 		
@@ -153,7 +153,7 @@
 				
 				//write("current status %s %s --------------- |%s| |%s| %d %d\n", post_key, (string)parent_id, id, reply_path, strlen(id), strlen(reply_path));
 				//if replying to this comment, draw the reply box
-				
+				//write(" mmm %s\n", id);
 				if(!parent_id && reply_path == id) //if this is the level after the root level
 				{
 					final_str += get_create_reply_form(key_parts[2], key_parts[3], id);

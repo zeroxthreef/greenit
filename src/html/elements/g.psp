@@ -115,7 +115,7 @@
 						{
 							if(strlen(request->variables->body) < 1 || strlen(request->variables->body) > 2000)
 							{
-								out += "keep comments down to 200 characters and make sure they contain a single character at least";
+								out += "keep comments down to 2000 characters and make sure they contain a single character at least";
 							}
 							else
 							{
@@ -123,18 +123,23 @@
 								string id = create_id("gnit");
 								comm_key_root += id;
 								
+								//dont need to check if root exists because it does here
+								
 								db->hmset(comm_key_root, "author", decorrupt(username_from_token(request->cookies->token)), "comment", safe_about_string(request->variables->body), "time", time(), "upvotes", 0, "downvotes", 0, "id", id);
 								//add to list
 								db->lpush(comm_list_key_root, comm_key_root);
-								
+								//add to comment counter and users comment list TODO
+								db->lpush(db_prefix + "post:" + current_subgreenit(request->not_query) + ":commentstotal", comm_key_root);
+								db->lpush(db_prefix + "user:" + username_from_token(request->cookies->token) + ":comments", comm_key_root);
 								out += "added comment";
+								
 							}
 						}
 						else //its a reply somewhere else
 						{
 							if(strlen(request->variables->body) < 1 || strlen(request->variables->body) > 2000)
 							{
-								out += "keep comments down to 200 characters and make sure they contain a single character at least";
+								out += "keep comments down to 2000 characters and make sure they contain a single character at least";
 							}
 							else
 							{
@@ -144,11 +149,22 @@
 								comm_list_key_root += ":" + request->variables->id_path;
 								
 								
-								db->hmset(comm_key_root, "author", decorrupt(username_from_token(request->cookies->token)), "comment", safe_about_string(request->variables->body), "time", time(), "upvotes", 0, "downvotes", 0, "id", id);
-								//add to list
-								db->lpush(comm_list_key_root, comm_key_root);
+								//TODO check if the root comment list even exists because while invalid comments wont be displayed, the willl be stored
 								
-								out += "added comment";
+								//if(db->exists(comm_list_key_root))
+								//{
+									
+									db->hmset(comm_key_root, "author", decorrupt(username_from_token(request->cookies->token)), "comment", safe_about_string(request->variables->body), "time", time(), "upvotes", 0, "downvotes", 0, "id", id);
+									//add to list
+									db->lpush(comm_list_key_root, comm_key_root);
+									//add to comment counter and users comment list TODO
+									db->lpush(db_prefix + "post:" + current_subgreenit(request->not_query) + ":commentstotal", comm_key_root);
+									db->lpush(db_prefix + "user:" + username_from_token(request->cookies->token) + ":comments", comm_key_root);
+									out += "added comment";
+								//}
+								//else
+									//out += "comment error";
+								
 							}
 						}
 					}
