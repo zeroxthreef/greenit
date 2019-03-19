@@ -84,7 +84,7 @@
 		
 		//create_id("gnit")
 		
-		comm_str = create_comments(post_key, 0, 0);
+		comm_str = create_comments(post_key, 0, "");
 		
 		if(comm_str)
 			final_str += comm_str;
@@ -95,13 +95,15 @@
 		return final_str;
 	}
 	
-	string create_comments(string post_key, string parent_id, int comment_index)
+	string create_comments(string post_key, string parent_id, string path)
 	{
-		string comm_key_root = post_key + ":comment:"; //takes the id. Wont ever be recursively named
+		//string comm_key_root = post_key + ":comment:"; //takes the id. Wont ever be recursively named
 		string comm_list_key_root = post_key + ":replies"; //needs the id of the comment to get its replies. This is a list. NOTE WILL BE THE ROOT POST IF NO :id
 		string comment_part_0 = "<div class = \"comment_", comment_part_1 = "\">", comment_part_2 = "<br><a href=\"", comment_part_3 = "\">reply</a></div>";
+		string final_str = "";
 		
-		string comments;
+		
+		array(string) comments;
 		int replies;
 		
 		//recursively create comments
@@ -110,6 +112,7 @@
 		if(parent_id)
 		{
 			//append the id to the end whenever applicable so its in the non root mode
+			comm_list_key_root += ":" + parent_id;
 		}
 		
 		//determine if comment has replies, and if not, add the /div to make a list instead
@@ -117,11 +120,21 @@
 		replies = db->llen(comm_list_key_root);
 		
 		
-		if(comment_index > replies)
+		if(!replies)
 			return 0;
 		
+		comments = db->lrange(comm_list_key_root, 0, -1);
 		
-		comments = db->lrange(comm_list_key_root, comment_index, -1);
+		foreach(comments, string comment)
+		{
+			string body = db->hget(comment, "comment");
+			string id = db->hget(comment, "id");
+			string replies = create_comments(post_key, id, path + id);
+			
+			
+			
+			
+		}
 		
 		
 		
