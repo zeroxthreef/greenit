@@ -97,10 +97,29 @@
 			else if(sub_path == "comments") //the comments page
 			{
 				//draw the post and comments
+				
+				//string comm_key_root = post_key + ":comment:"; //takes the id. Wont ever be recursively named
+				string comm_list_key_root = post_key + ":replies"; //append the id to the end if this isnt the root
 				array(string) url_parts = request->not_query / "/";
 				out += get_comments_post(request->not_query);
 				out += "<hr></hr>";
-				out += get_comments(request->not_query, url_parts[4]);
+				
+				//respond to POSTs
+				
+				if(request->method == "POST")
+				{
+					if(user_logged_in(request->cookies->token))
+					{
+						
+					}
+					else
+						out += "not logged in";
+				}
+				//create_id("gnit")   username_from_token
+				//=========================
+				
+				
+				out += get_comments(request->not_query, url_parts[4], request->cookies->token);
 			}
 			else if(sub_path == "css")
 			{

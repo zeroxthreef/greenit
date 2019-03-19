@@ -12,6 +12,7 @@ iframe
 textarea
 {
 	min-width: 97%;
+	max-width: 97%;
 }
 
 .user_subs
