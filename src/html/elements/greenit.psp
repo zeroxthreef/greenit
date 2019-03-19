@@ -58,7 +58,7 @@
 				if(strlen(body) < 1)
 					response += "<div class=\"flair\">" + "Title only" + "</div>";
 				
-				response += "<h1>" + db->hget(key, "title") + "</h1><div class=\"above_post\">";
+				response += "<h1>" + safe_title_display_string(db->hget(key, "title")) + "</h1><div class=\"above_post\">";
 				response += "<h3>Net votes: " + ((int)db->hget(key, "upvotes") - (int)db->hget(key, "downvotes")) + "</h3>";
 				response += "<iframe class=\"uv_dv\" src=\"/action/upvote?c=" + replace(post[4], "\r", "") +"&g=" + current_subgreenit(uri) + "\"></iframe><br>";
 				response += "<iframe class=\"uv_dv\" src=\"/action/downvote?c=" + replace(post[4], "\r", "") +"&g=" + current_subgreenit(uri) + "\"></iframe><br>";
@@ -207,7 +207,7 @@
 		*/
 		return "\n\
 		<div class=\"feed_object\">\n\
-			<div class=\"feed_object_updn_container\">(" + ((int)db->hget(fixed_key, "upvotes") - (int)db->hget(fixed_key, "downvotes")) + ")<hr></hr><iframe class=\"uv_dv\" src=\"/action/upvote?c=" + replace(temp[3], "\r", "") +"&g=" + temp[2] + "\"></iframe><br><iframe class=\"uv_dv\" src=\"/action/downvote?c=" + replace(temp[3], "\r", "") +"&g=" + temp[2] + "\"></iframe><br></div><div class=\"feed_object_title_container\"><a href=\"" + "/g/" + db->hget(fixed_key, "parent") + "/comments/" + temp[3] + "/\"><h2>" + db->hget(fixed_key, "title") + "</h2></a></div>\n\
+			<div class=\"feed_object_updn_container\">(" + ((int)db->hget(fixed_key, "upvotes") - (int)db->hget(fixed_key, "downvotes")) + ")<hr></hr><iframe class=\"uv_dv\" src=\"/action/upvote?c=" + replace(temp[3], "\r", "") +"&g=" + temp[2] + "\"></iframe><br><iframe class=\"uv_dv\" src=\"/action/downvote?c=" + replace(temp[3], "\r", "") +"&g=" + temp[2] + "\"></iframe><br></div><div class=\"feed_object_title_container\"><a href=\"" + "/g/" + db->hget(fixed_key, "parent") + "/comments/" + temp[3] + "/\"><h2>" + safe_title_display_string(db->hget(fixed_key, "title")) + "</h2></a></div>\n\
 			" + (strlen(body) ? "" : "<br><div class=\"flair\">" + "Title only" + "</div>") + "\n\
 		</div>";
 	}
@@ -438,6 +438,26 @@
 		temp = final_str / "\n";
 		
 		final_str = temp * "<br>";
+		
+		return final_str;
+	}
+	
+	string safe_title_display_string(string about)
+	{
+		string final_str;
+		array(string) temp;
+		
+		temp = about / "<";
+		
+		final_str = temp * "&lt";
+		
+		temp = final_str / ">";
+		
+		final_str = temp * "&gt";
+		
+		temp = final_str / "\n";
+		
+		final_str = temp * "";
 		
 		return final_str;
 	}

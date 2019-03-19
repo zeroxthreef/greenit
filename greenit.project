@@ -120,6 +120,7 @@
     <File Name="src/install.sh"/>
     <File Name="src/greenit.pike"/>
     <File Name="src/greenit.service"/>
+    <File Name="src/update.sh"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
 </CodeLite_Project>

@@ -8,6 +8,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=www-data
+Group=redis
 ExecStart=/usr/local/bin/ScriptRunner_SCGI.pike
 
 [Install]
