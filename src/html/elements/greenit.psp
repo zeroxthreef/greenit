@@ -421,7 +421,7 @@
 		
 		for(int i = 0; i < strlen(final_str); i++)
 		{
-			if((final_str[i] >= 65 && final_str[i] <= 90) || (final_str[i] >= 97 && final_str[i] <= 122))
+			if((final_str[i] >= 65 && final_str[i] <= 90) || (final_str[i] >= 97 && final_str[i] <= 122) || final_str[i] == 95)
 			{
 				finalized += final_str[i..i];
 			}
