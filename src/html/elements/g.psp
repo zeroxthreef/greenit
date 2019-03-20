@@ -94,6 +94,10 @@
 				out += format_notes + response;
 				out += get_create_form(current_subgreenit(request->not_query));
 			}
+			else if(sub_path == "manage") //the subgreenit management page
+			{
+				out += "hey";
+			}
 			else if(sub_path == "comments") //the comments page
 			{
 				//"draw" the post and comments

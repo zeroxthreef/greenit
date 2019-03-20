@@ -91,6 +91,12 @@
 		else
 			comm_str = create_comments(post_key, 0, "", 0);
 		
+		//let the user edit their post
+		if(sizeof(path_parts) >= 4)
+		{
+			
+		}
+		
 		
 		if(comm_str)
 			final_str += comm_str;
