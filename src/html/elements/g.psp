@@ -174,8 +174,9 @@
 				//create_id("gnit")   username_from_token
 				//=========================
 				
-				
+				out += "<div class=\"comment_container\">";
 				out += get_comments(request->not_query, url_parts[4], request->cookies->token);
+				out += "</div>";
 			}
 			else if(sub_path == "css")
 			{

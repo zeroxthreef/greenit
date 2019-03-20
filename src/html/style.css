@@ -150,3 +150,9 @@ textarea
 	border-left: 2px solid #91A582;
 	width: 94.9%;
 }
+
+.comment_container
+{
+	overflow: hidden;
+	padding: 0.8%;
+}
