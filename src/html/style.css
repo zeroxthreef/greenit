@@ -127,6 +127,7 @@ textarea
 
 .comment_0
 {
+	overflow: hidden;
 	margin-bottom: 0.8%;
 	padding-left: 4.8%;
 	padding-top: 0.8%;
@@ -134,11 +135,12 @@ textarea
 	display: inline-block;
 	background-color: #f2f2f2;
 	border-left: 2px solid #91A582;
-	width: 94.9%;
+	width: 95%;
 }
 
 .comment_1
 {
+	overflow: hidden;
 	margin-bottom: 0.8%;
 	padding-left: 4.8%;
 	padding-top: 0.8%;
@@ -146,5 +148,5 @@ textarea
 	display: inline-block;
 	background-color: #e6e6e6;
 	border-left: 2px solid #91A582;
-	width: 94.9%;
+	width: 95%;
 }

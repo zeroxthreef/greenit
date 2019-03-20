@@ -400,7 +400,7 @@
 	
 	string safe_title_string(string title)
 	{
-		string final_str;
+		string final_str, finalized = "";
 		array(string) temp;
 		
 		temp = title / " ";
@@ -419,7 +419,15 @@
 		
 		final_str = temp * "";
 		
-		return final_str;
+		for(int i = 0; i < strlen(final_str); i++)
+		{
+			if((final_str[i] >= 65 && final_str[i] <= 90) || (final_str[i] >= 97 && final_str[i] <= 122))
+			{
+				finalized += final_str[i..i];
+			}
+		}
+		
+		return finalized;
 	}
 	
 	string safe_about_string(string about)

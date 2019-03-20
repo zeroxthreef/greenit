@@ -27,6 +27,7 @@ mixed parse(object id)
 			
 			//set the cookie and stuff. The cookie expires like 2 weeks in the future in seconds
 			mapping map = HTTP.set_cookie("token", cookie, time() + 604800, id);
+			map->_headers["set-cookie"] += "; HttpOnly;";
 			
 			return ([
 			"_headers":(["set-cookie": replace(map->_headers["set-cookie"], "\r\n", "")]),
