@@ -124,7 +124,7 @@
 					
 					out += "<form action=\"/g/" + current_subgreenit(request->not_query) + "/\" method=\"post\">\n\
 						Subgreenit about text:<br>\n\
-						<textarea name=\"about\" cols=\"30\" rows=\"10\">" + db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about") + "</textarea><br>\n\
+						<textarea name=\"about\" cols=\"30\" rows=\"10\">" + replace(db->hget(db_prefix + "subgreenit:" + current_subgreenit(request->not_query), "about"), "</textarea>", "</txtarea>") + "</textarea><br>\n\
 						<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
 					</form><br>";
 					
