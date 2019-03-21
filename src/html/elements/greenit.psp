@@ -42,7 +42,7 @@
 		return final_str;
 	}
 	
-	string get_comments_post(string uri, string token)
+	string get_comments_post(string uri, string token, string method, string postdata)
 	{
 		array(string) post = uri / "/";
 		string response = "";
@@ -62,10 +62,21 @@
 				//let the user edit their post
 				if(sizeof(post) > 6)
 				{
-					//respond to POST edits here
+					if(post[5] == "edit" && decorrupt(db->hget(db_prefix + "post:" + post[2] + ":" + post[4], "creator")) == username_from_token(token) && method == "POST")
+					{
+						//respond to POST edits here
+						
+						db->hset(db_prefix + "post:" + post[2] + ":" + post[4], "body", postdata);
+						//also set the edit timestamp
+						db->hset(db_prefix + "post:" + post[2] + ":" + post[4], "edit_date", time());
+						
+						response += "post edited. You can return to normal view";
+					}
 				}
 				
 				response += "<h1>" + safe_title_display_string(db->hget(key, "title")) + "</h1><div class=\"above_post\">";
+				if((int)db->hget(key, "edit_date"))
+					response += "<b>post has been edited</b>";
 				response += "<h3>Net votes: " + ((int)db->hget(key, "upvotes") - (int)db->hget(key, "downvotes")) + "</h3>";
 				response += "<iframe class=\"uv_dv\" src=\"/action/upvote?c=" + replace(post[4], "\r", "") +"&g=" + current_subgreenit(uri) + "\"></iframe><br>";
 				response += "<iframe class=\"uv_dv\" src=\"/action/downvote?c=" + replace(post[4], "\r", "") +"&g=" + current_subgreenit(uri) + "\"></iframe><br>";
@@ -79,7 +90,29 @@
 					if(post[5] == "edit" && decorrupt(db->hget(db_prefix + "post:" + post[2] + ":" + post[4], "creator")) == username_from_token(token))
 						response += "<a href=\"/g/" + post[2] + "/comments/" + post[4] +"/\">view</a>";
 				}
-				response += "</div><div class=\"post\">Posted by " + db->hget(key, "creator") + "<div class=\"post_content\">" + format_parse(db->hget(key, "body")) + "</div>";
+				response += "</div><div class=\"post\">Posted by " + db->hget(key, "creator") + "<div class=\"post_content\">";
+				
+				//repeat the same check
+				if(sizeof(post) <= 6)
+				{
+					if(decorrupt(db->hget(db_prefix + "post:" + post[2] + ":" + post[4], "creator")) == username_from_token(token))
+						response += format_parse(db->hget(key, "body"));
+				}
+				else
+				{
+					if(post[5] == "edit" && decorrupt(db->hget(db_prefix + "post:" + post[2] + ":" + post[4], "creator")) == username_from_token(token))
+						response += "\n\
+						<form action=\"/g/" + post[2] + "/comments/" + post[4] +"/edit/\" method=\"post\">\n\
+							<textarea name=\"edit_body\" cols=\"80\" rows=\"14\">" + db->hget(key, "body") + "</textarea><br><br>\n\
+							<input type=\"submit\" value=\"submit\" id=\"submit\">\n\
+						</form>";
+						else
+							response += format_parse(db->hget(key, "body"));
+				}
+				
+				
+				
+				response += "</div>";
 				
 				//handle different types of date formats
 				string post_date = db->hget(key, "post_date");
@@ -115,7 +148,10 @@
 		//TODO work with reply stuff. Need to parse out the reply path with ids
 		
 		if(sizeof(path_parts) >= 4)
-			comm_str = create_comments(post_key, 0, path_parts[5], 0);
+			if(path_parts[5] != "edit")
+				comm_str = create_comments(post_key, 0, path_parts[5], 0);
+			else
+				comm_str = create_comments(post_key, 0, "", 0);
 		else
 			comm_str = create_comments(post_key, 0, "", 0);
 		

@@ -106,16 +106,17 @@
 				string comm_key_root = db_prefix + "post:" + current_subgreenit(request->not_query) + ":" + url_parts[4] + ":comment:"; //takes the id. Wont ever be recursively named
 				string comm_list_key_root = db_prefix + "post:" + current_subgreenit(request->not_query) + ":" + url_parts[4] + ":replies"; //append the id to the end if this isnt the root
 				
-				out += get_comments_post(request->not_query, request->cookies->token);
+				out += get_comments_post(request->not_query, request->cookies->token, request->method, request->variables->edit_body);
 				out += "<hr></hr>";
 				
 				//respond to POSTs
 				
 				if(request->method == "POST")
 				{
-					if(user_logged_in(request->cookies->token))
+					if(user_logged_in(request->cookies->token) && url_parts[5] != "edit")
 					{
 						if(!strlen(request->variables->id_path)) //empty/root
+						//if(!request->variables->id_path && url_parts[5] != "edit") //empty/root
 						{
 							if(strlen(request->variables->body) < 1 || strlen(request->variables->body) > 2000)
 							{
