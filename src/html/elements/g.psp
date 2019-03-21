@@ -81,7 +81,7 @@
 						db->lpush(posts_key, sg_post_key);
 						
 						//create the post key
-						db->hmset(sg_post_key, "creator", username_from_token(request->cookies->token), "body", request->variables->body, "post_date", Protocols.HTTP.Server.http_date(time()), "upvotes", "0", "downvotes", "0", "parent", current_subgreenit(request->not_query), "title", request->variables->title, "deleted", "0");
+						db->hmset(sg_post_key, "creator", username_from_token(request->cookies->token), "body", request->variables->body, "post_date", time(), "upvotes", "0", "downvotes", "0", "parent", current_subgreenit(request->not_query), "title", request->variables->title, "deleted", "0");
 						//add this post to the users post counter
 						db->lpush(user_post_key, sg_post_key);
 						
@@ -106,7 +106,7 @@
 				string comm_key_root = db_prefix + "post:" + current_subgreenit(request->not_query) + ":" + url_parts[4] + ":comment:"; //takes the id. Wont ever be recursively named
 				string comm_list_key_root = db_prefix + "post:" + current_subgreenit(request->not_query) + ":" + url_parts[4] + ":replies"; //append the id to the end if this isnt the root
 				
-				out += get_comments_post(request->not_query);
+				out += get_comments_post(request->not_query, request->cookies->token);
 				out += "<hr></hr>";
 				
 				//respond to POSTs

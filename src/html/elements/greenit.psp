@@ -42,7 +42,7 @@
 		return final_str;
 	}
 	
-	string get_comments_post(string uri)
+	string get_comments_post(string uri, string token)
 	{
 		array(string) post = uri / "/";
 		string response = "";
@@ -58,11 +58,39 @@
 				if(strlen(body) < 1)
 					response += "<div class=\"flair\">" + "Title only" + "</div>";
 				
+				
+				//let the user edit their post
+				if(sizeof(post) > 6)
+				{
+					//respond to POST edits here
+				}
+				
 				response += "<h1>" + safe_title_display_string(db->hget(key, "title")) + "</h1><div class=\"above_post\">";
 				response += "<h3>Net votes: " + ((int)db->hget(key, "upvotes") - (int)db->hget(key, "downvotes")) + "</h3>";
 				response += "<iframe class=\"uv_dv\" src=\"/action/upvote?c=" + replace(post[4], "\r", "") +"&g=" + current_subgreenit(uri) + "\"></iframe><br>";
 				response += "<iframe class=\"uv_dv\" src=\"/action/downvote?c=" + replace(post[4], "\r", "") +"&g=" + current_subgreenit(uri) + "\"></iframe><br>";
-				response += "</div><div class=\"post\">Posted by " + db->hget(key, "creator") + "<div class=\"post_content\">" + format_parse(db->hget(key, "body")) + "</div>" + db->hget(key, "post_date") + "</div>";
+				if(sizeof(post) <= 6)
+				{
+					if(decorrupt(db->hget(db_prefix + "post:" + post[2] + ":" + post[4], "creator")) == username_from_token(token))
+						response += "<a href=\"/g/" + post[2] + "/comments/" + post[4] +"/edit/\">edit</a>";
+				}
+				else
+				{
+					if(post[5] == "edit" && decorrupt(db->hget(db_prefix + "post:" + post[2] + ":" + post[4], "creator")) == username_from_token(token))
+						response += "<a href=\"/g/" + post[2] + "/comments/" + post[4] +"/\">view</a>";
+				}
+				response += "</div><div class=\"post\">Posted by " + db->hget(key, "creator") + "<div class=\"post_content\">" + format_parse(db->hget(key, "body")) + "</div>";
+				
+				//handle different types of date formats
+				string post_date = db->hget(key, "post_date");
+				
+				if(post_date[0..0] >= "A" && post_date[0..0] <= "Z")
+					response += post_date;
+				else
+					response += Protocols.HTTP.Server.http_date((int)post_date);
+				
+				
+				response += "</div>";
 			}
 			else
 				response = "post does not exist";
@@ -90,12 +118,6 @@
 			comm_str = create_comments(post_key, 0, path_parts[5], 0);
 		else
 			comm_str = create_comments(post_key, 0, "", 0);
-		
-		//let the user edit their post
-		if(sizeof(path_parts) >= 4)
-		{
-			
-		}
 		
 		
 		if(comm_str)
