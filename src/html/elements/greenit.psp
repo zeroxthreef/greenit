@@ -97,6 +97,8 @@
 				{
 					if(decorrupt(db->hget(db_prefix + "post:" + post[2] + ":" + post[4], "creator")) == username_from_token(token))
 						response += format_parse(db->hget(key, "body"));
+					else
+						response += format_parse(db->hget(key, "body"));
 				}
 				else
 				{
