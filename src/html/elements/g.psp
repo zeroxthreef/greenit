@@ -97,6 +97,7 @@
 			else if(sub_path == "manage") //the subgreenit management page
 			{
 				out += "<h1>Manage Subgreenit</h1>";
+				out += generate_subgreenit_management(request->not_query, current_subgreenit(request->not_query), request->cookies->token, request->variables);
 			}
 			else if(sub_path == "comments") //the comments page
 			{

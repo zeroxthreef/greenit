@@ -351,7 +351,7 @@
 				string temp = sub_path[1..];
 				page = (int)temp;
 			}
-			else if(sub_path == "comments" || sub_path == "create" || sub_path == "css")
+			else if(sub_path == "comments" || sub_path == "create" || sub_path == "css" || sub_path == "manage")
 				abort = 1;
 			else //its any other
 			{
@@ -380,6 +380,22 @@
 		
 		
 		return assemble_nav_controls(prev, next, page, maxpages);
+	}
+	
+	string generate_subgreenit_management(string uri, string subgreenit, string token, mapping variables)
+	{
+		string final_str = "";
+		
+		if(user_is_subgreenit_influencer(uri, token))
+		{
+			final_str += "haha, cool";
+			
+		}
+		else
+			final_str += "Insufficient permissions";
+		
+		
+		return final_str;
 	}
 	
 	
@@ -740,6 +756,16 @@
 			if(key_data[2] == username)
 				return 1;
 		}
+		return 0;
+	}
+	
+	int user_is_subgreenit_influencer(string uri, string token)
+	{
+		string key = db_prefix + "subgreenit:" + current_subgreenit(uri);
+		
+		if(username_from_token(token) == replace(db->hget(key, "creator"), "\r\n", "") || user_is_moderator(token, uri) || user_is_admin(token))
+			return 1;
+		
 		return 0;
 	}
 	

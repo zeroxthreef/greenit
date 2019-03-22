@@ -138,6 +138,9 @@
 					
 					//the css setting button
 					out += "<input type=\"button\" onclick=\"location.href=\'/g/" + current_subgreenit(request->not_query) + "/css/\'\" value=\"Modify CSS\" /><br><br>";
+					
+					//the management page
+					out += "<input type=\"button\" onclick=\"location.href=\'/g/" + current_subgreenit(request->not_query) + "/manage/\'\" value=\"Manage subgreenit\" /><br><br>";
 				}
 			
 		%>
