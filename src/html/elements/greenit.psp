@@ -388,7 +388,11 @@
 		
 		if(user_is_subgreenit_influencer(uri, token))
 		{
-			final_str += "haha, cool";
+			final_str += "Manage the current subgreenit's qualities<hr></hr><br>";
+			
+			/* add links to sub-management pages */
+			
+			
 			
 		}
 		else
@@ -569,7 +573,7 @@
 		
 		for(int i = 0; i < strlen(final_str); i++)
 		{
-			if(final_str[i..i + strlen("url(") - 1] == "url(")
+			if(lower_case(final_str[i..i + strlen("url(") - 1]) == "url(")
 			{
 				
 				if(search(final_str[i + strlen("url(")..], ")") < 2) //make sure it finds the closing parenthesees
